@@ -1,4 +1,6 @@
-import { backendURL, successNotification, errorNotification } from '../utils/utils.js';
+import { backendURL, successNotification, errorNotification } from "./utils/utils.js";
+
+
 
 /* Form Register */
 const form_register = document.getElementById("form_register");
