@@ -1,4 +1,4 @@
-import { backendURL, successNotification, errorNotification } from "./utils/utils.js";
+import { backendURL, successNotification, errorNotification } from "../utils/utils.js";
 
 
 
