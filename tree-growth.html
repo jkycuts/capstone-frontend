@@ -7,13 +7,14 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Tree Growth Form - GreenGauge</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
         <script type="module" src="js/dashboard/dashboard.js"></script>
 
         <script src="js/utils/script.js"></script>
+        <script type="module" src="js/form/tree-growth-form.js"></script>
 
     </head>
     <body class="sb-nav-fixed">
@@ -104,7 +105,13 @@
                     
                         <div class="form-container">
                             <h2>Tree Growth Form</h2>
-                            <form action="/your-backend-endpoint" method="POST">
+                            
+                             <!-- Notifications -->
+                        <div class="alert alert-success d-none" role="alert"></div>
+                        <div class="alert alert-danger d-none" role="alert"></div>
+
+                        <form id="form_tree-growth">
+
                                 <div class="form-group">
                                     <label for="dbh">Diameter at Breast Height (cm)</label>
                                     <input type="number" step="0.1" id="dbh" name="dbh" required>
@@ -121,8 +128,8 @@
                                 </div>
                     
                                 <div class="form-group">
-                                    <label for="longtitude">Longitude</label>
-                                    <input type="number" step="0.000001" id="longtitude" name="longtitude" required>
+                                    <label for="longitude">Longitude</label>
+                                    <input type="number" step="0.000001" id="longitude" name="longitude" required>
                                 </div>
                     
                                 <button type="submit" class="custom-button">Submit</button>
@@ -145,10 +152,6 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+       
     </body>
 </html>
