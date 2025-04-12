@@ -6,14 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard - GreenGauge</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <title>Plantation Form - GreenGauge</title>
+      
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
         <script type="module" src="js/dashboard/dashboard.js"></script>
 
         <script src="js/utils/script.js"></script>
+        <script type="module" src="js/form/plantation-form.js"></script>
 
     </head>
     <body class="sb-nav-fixed">
@@ -49,7 +50,7 @@
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Form</div>
-                            <a class="nav-link collapsed" href="/ghg-form.html" >
+                            <a class="nav-link collapsed" href="/company-form.html" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Company
                                 
@@ -97,10 +98,41 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-2">Dashboard</h1>
                     
-                        
+                    
+                    </head>
+                    <body>
+                    
+                    
+                        <div class="form-container">
+                            <h2>Plantation Form</h2>
+                             <!-- Notifications -->
+                        <div class="alert alert-success d-none" role="alert"></div>
+                        <div class="alert alert-danger d-none" role="alert"></div>
+                            <form id="form_plantation">
+                                <div class="form-group">
+                                    <label for="dbh">Area Planted (hectares)</label>
+                                    <input type="number" id="area_planted" name="area_planted" step="0.01" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="seedlings_planted">Seedlings Planted</label>
+                                    <input type="number" id="seedlings_planted" name="seedlings_planted" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="plantation_age">Plantation Age (years)</label>
+                                    <input type="date" id="plantation_age" name="plantation_age" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="geotag_photos">Geotagged Photos</label>
+                                    <input type="file" id="geotag_photos" name="geotag_photos" accept="image/*" multiple required>
+                                </div>
+                    
+                                <button type="submit" class="custom-button">Submit</button>
+                            </form>
+                        </div>
                         
                         
                         
@@ -117,10 +149,6 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+
     </body>
 </html>

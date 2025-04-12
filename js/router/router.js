@@ -5,7 +5,7 @@ function setRouter() {
         case "/":
         case "/register.html":
         if(localStorage.getItem("token")) {
-            window.location.pathname = "/index.html";
+            window.location.pathname = "/resources/index.html";
         }
         break;
         case "/index.html":

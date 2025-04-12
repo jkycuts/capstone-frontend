@@ -53,3 +53,4 @@ getLoggedUser();
         errorNotification(json.message, 10);
     }
 }
+

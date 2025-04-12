@@ -7,13 +7,14 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Dashboard - GreenGauge</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+       
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
         <script type="module" src="js/dashboard/dashboard.js"></script>
 
         <script src="js/utils/script.js"></script>
+        <script type="module" src="js/form/company-form.js"></script>
 
     </head>
     <body class="sb-nav-fixed">
@@ -49,7 +50,7 @@
                                 Dashboard
                             </a>
                             <div class="sb-sidenav-menu-heading">Form</div>
-                            <a class="nav-link collapsed" href="/ghg-form.html" >
+                            <a class="nav-link collapsed" href="/company-form.html" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Company
                                 
@@ -96,16 +97,29 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-2">Dashboard</h1>
-                    
+                <div class="form-container">
+                    <h2>Company Form</h2>
+                        <!-- Notifications -->
+                    <div class="alert alert-success d-none" role="alert"></div>
+                    <div class="alert alert-danger d-none" role="alert"></div>
+
+                    <form id="form_company">
+                        <div class="form-group">
+                            <label for="name">Company Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
                         
+                        <div class="form-group">
+                            <label for="location">Address</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                        </div>
+            
                         
-                        
-                        
-                       
-                </main>
+            
+                        <button type="submit" class="custom-button">Save</button>
+                    </form>
+                </div>
+            
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -117,10 +131,7 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+       
+       
     </body>
 </html>
