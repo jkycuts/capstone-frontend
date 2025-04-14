@@ -14,7 +14,11 @@
         <script type="module" src="js/dashboard/dashboard.js"></script>
 
         <script src="js/utils/script.js"></script>
+        
         <script type="module" src="/js/form/ghg.js"></script>
+
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        
 
 
     </head>
@@ -81,9 +85,19 @@
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                         Tree Growth
                                     </a>
-
                                 </nav>
                             </div>
+
+                            <div class="sb-sidenav-menu-heading">Inventory</div>
+                            <a class="nav-link" href="ghg-emission-table.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                GHG Emission
+                            </a>
+                            <a class="nav-link" href="carbon-seq.html">
+                              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                              Carbon Sequestration
+                          </a>
+
                             <div class="sb-sidenav-menu-heading">Reports</div>
                             <a class="nav-link" href="charts.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -99,97 +113,82 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
-                  
-                 
-                  
-              </head>
-              <body>
+              <main>
+                <div class="container-fluid my-4">
+                  <div class="mx-auto p-4 shadow rounded bg-white" style="max-width: 900px;">
+                    <h2 class="text-center mb-4">GHG Emission Inventory</h2>
               
-                <div class="form-container mb-3">
-                  <h2>GHG Emission Entry</h2>
-                   <!-- Notifications -->
-<div class="alert alert-success d-none" role="alert"></div>
-<div class="alert alert-danger d-none" role="alert"></div>
-                  <form id="form_ghg_emission">
-                    <!-- General Info -->
-                    <h3>General Information</h3>
-                    <div class="form-group">
-                      <label for="year">Year</label>
-                      <input type="text" id="year" name="year">
-
-                    </div>
-                
-                    <div class="form-group">
-                      <label for="quarter">Quarter</label>
-                      <select id="quarter" name="quarter" required>
-                        <option value="">Select Quarter</option>
-                        <option value="Q1">Q1</option>
-                        <option value="Q2">Q2</option>
-                        <option value="Q3">Q3</option>
-                        <option value="Q4">Q4</option>
-                      </select>
-                    </div>
-                
-                    <!-- Scope 1 -->
-                    <h3>Fuel Consumption</h3>
-                    <div class="form-group">
-                      <label for="fuel_source">Fuel Source</label>
-                      <input type="text" id="fuel_source" name="fuel_source" required>
-                    </div>
-                
-                    <div class="form-group">
-                      <label for="fuel_type">Fuel Type</label>
-                      <input type="text" id="fuel_type" name="fuel_type" required>
-                    </div>
-                
-                    <div class="form-group">
-                      <label for="fuel_liters_used">Liters Used</label>
-                      <input type="number" id="fuel_liters_used" name="fuel_liters_used" step="0.01" required>
-                    </div>
-                
-                    <!-- Scope 2 -->
-                    <h3>Purchased Electricity</h3>
-                    <div class="form-group">
-                      <label for="electricity_kwh">Electricity Used (kWh)</label>
-                      <input type="number" id="electricity_kwh" name="electricity_kwh" required>
-                    </div>
-                
-                    <!-- Scope 3 -->
-                    <h3>Business Travel</h3>
-                    <div class="form-group">
-                      <label for="travel_category">Travel Category</label>
-                      <select id="travel_category" required>
-                        <option value="">-- Select Category --</option>
-                        <option value="short">Short</option>
-                        <option value="medium">Medium</option>
-                        <option value="long">Long</option>
-                        <option value="unknown">Unknown</option>
-                      </select>
-                      
-                    </div>
-                
-                    <div class="form-group">
-                      <label for="travel_distance_miles">Total Distance (Miles)</label>
-                      <input type="number" id="travel_distance_miles" name="travel_distance_miles" required>
-                    </div>
-                
-                    <div class="form-group">
-                      <label for="travel_number_of_trips">Number of Trips</label>
-                      <input type="number" id="travel_number_of_trips" name="travel_number_of_trips" required>
-                    </div>
-                
-                    <button type="submit" class="custom-button">Submit</button>
-                  </form>
+                    <!-- Notifications -->
+                    <div class="alert alert-success d-none" role="alert"></div>
+                    <div class="alert alert-danger d-none" role="alert"></div>
+              
+                    <form id="form_ghg_emission">
+                      <!-- General Info -->
+                      <h4>General Information</h4>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <input class="form-control" type="number" placeholder="Year" id="year" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <select class="form-select" id="quarter" name="quarter">
+                            <option selected disabled>Quarter</option>
+                            <option >Q1</option>
+                            <option >Q2</option>
+                            <option >Q3</option>
+                            <option >Q4</option>
+                          </select>
+                        </div>
+                      </div>
+              
+                      <!-- Scope 1: Fuel -->
+                      <h4>Fuel Consumption</h4>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <input class="form-control" type="text" placeholder="Fuel Source" id="fuel_source" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <input class="form-control" type="text" placeholder="Fuel Type" id="fuel_type" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <input class="form-control" type="number" placeholder="Liters Used" id="fuel_liters_used" required>
+                        </div>
+                      </div>
+              
+                      <!-- Scope 2: Electricity -->
+                      <h4>Purchased Electricity</h4>
+                      <div class="mb-3">
+                        <input class="form-control" type="number" placeholder="Electricity Used (kWh)" id="electricity_kwh" required>
+                      </div>
+              
+                      <!-- Scope 3: Travel -->
+                      <h4>Business Travel</h4>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <select class="form-select" id="travel_category" name="travel_category">
+                            <option selected disabled>Category</option>
+                            <option value="short">Short</option>
+                            <option value="medium">Medium</option>
+                            <option value="long">Long</option>
+                            <option value="unknown">Unknown</option>
+                        </select>
+                        
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <input class="form-control" type="number" placeholder="Total Distance (Miles)" id="travel_distance_miles" name="travel_distance_miles" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <input class="form-control" type="number" placeholder="Number of Trips" id="travel_number_of_trips" name="travel_number_of_trips" required>
+                        </div>
+                      </div>
+              
+                      <div class="text-center mt-4">
+                        <button type="submit" class="custom-button">Save</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-                
-               
-                
-                        
-                        
-                        
-                       
-                </main>
+              </main>
+              
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -200,9 +199,6 @@
                 </footer>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        
-        
-        <script src="js/datatables-simple-demo.js"></script>
+
     </body>
 </html>
