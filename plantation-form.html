@@ -77,7 +77,7 @@
     
                                     <a class="nav-link" href="/tree-growth.html">
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                        Tree Growth
+                                        Tree Data
                                     </a>
                                 </nav>
                             </div>
@@ -116,25 +116,28 @@
                         <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
                 
                         <form id="form_plantation" enctype="multipart/form-data" method="POST">
-                            <div class="mb-3">
-                                <label for="area_planted" class="form-label">Area Planted (hectares)</label>
-                                <input type="number" step="0.01" class="form-control" id="area_planted" name="area_planted" required>
-                            </div>
+
+                            <label for="form-label " style="font-weight:600; font-size: large;">
+                                Area Planted (Hectares)
+                            </label>
+                            <input class="form-control mb-4 mt-2" type="text" placeholder="Area Planted (Hectares)" aria-label="area_planted" step="0.01" id = "area_planted" name="area_planted" required>
+
+                            <label for="form-label " style="font-weight:600; font-size: large;">
+                                Seedlings Planted
+                            </label>
+                            <input class="form-control mb-4 mt-2" type="text" placeholder="Seedlings Planted" aria-label="seedlings_planted"  id = "seedlings_planted" name="seedlings_planted" required>
                 
-                            <div class="mb-3">
-                                <label for="seedlings_planted" class="form-label">Seedlings Planted</label>
-                                <input type="number" class="form-control" id="seedlings_planted" name="seedlings_planted" required>
-                            </div>
-                
-                            <div class="mb-3">
-                                <label for="plantation_age" class="form-label">Date Planted</label>
-                                <input type="date" class="form-control" id="plantation_age" name="plantation_age" required>
-                            </div>
-                
-                            <div class="mb-4">
-                                <label for="geotag_photos" class="form-label">Geotagged Photos</label>
-                                <input type="file" class="form-control" id="geotag_photos" name="geotag_photos[]" accept="image/*" multiple required>
-                            </div>
+                            <label for="form-label " style="font-weight:600; font-size: large;">
+                                Age of Plantation
+                            </label>
+                            <input class="form-control mb-4 mt-2" type="text" placeholder="Age of Plantation" aria-label="plantation_age" id = "plantation_age" name="plantation_age" required>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="form-label " style="font-weight:600; font-size:medium;">
+                                  Date Recorded
+                              </label>
+                                <input class="form-control mt-2" type="date" placeholder="Date Recorded" id="date_recorded" name="date_recorded" required>
+                              </div>
                 
                             <button type="submit" class="custom-button">Save</button>
                         </form>

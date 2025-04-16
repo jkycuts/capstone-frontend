@@ -83,7 +83,7 @@
     
                                     <a class="nav-link" href="/tree-growth.html">
                                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                        Tree Growth
+                                        Tree Data
                                     </a>
                                 </nav>
                             </div>
@@ -116,7 +116,7 @@
               <main>
                 <div class="container-fluid my-4">
                   <div class="mx-auto p-4 shadow rounded bg-white" style="max-width: 900px;">
-                    <h2 class="text-center mb-4">GHG Emission Inventory</h2>
+                    <h2 class="text-center mb-4">GHG Emission Form</h2>
               
                     <!-- Notifications -->
                     <div class="alert alert-success d-none" role="alert"></div>
@@ -124,61 +124,101 @@
               
                     <form id="form_ghg_emission">
                       <!-- General Info -->
-                      <h4>General Information</h4>
+                      <h4 class="mb-3">General Information</h4>
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <input class="form-control" type="number" placeholder="Year" id="year" required>
+                          <label for="form-label " style="font-weight:600; font-size: large;">
+                            Year
+                        </label>
+                          <input class="form-control mt-2" type="number" placeholder="Year" id="year" required>
                         </div>
+
                         <div class="col-md-6 mb-3">
-                          <select class="form-select" id="quarter" name="quarter">
+                          <label for="form-label " style="font-weight:600; font-size: large;">
+                            Quarter
+                        </label>
+                          <select class="form-select mt-2" id="quarter" name="quarter">
                             <option selected disabled>Quarter</option>
-                            <option >Q1</option>
-                            <option >Q2</option>
-                            <option >Q3</option>
-                            <option >Q4</option>
+                            <option value="Q1">Q1</option>
+                            <option value="Q2">Q2</option>
+                            <option value="Q3">Q3</option>
+                            <option value="Q4">Q4</option>
                           </select>
                         </div>
                       </div>
               
                       <!-- Scope 1: Fuel -->
-                      <h4>Fuel Consumption</h4>
+                      <h4 class="mb-3">Fuel Consumption</h4>
                       <div class="row">
                         <div class="col-md-4 mb-3">
-                          <input class="form-control" type="text" placeholder="Fuel Source" id="fuel_source" required>
+                          <label for="form-label " style="font-weight:600; font-size: medium;">
+                            Fuel Source
+                        </label>
+                          <input class="form-control mt-2" type="text" placeholder="Fuel Source" id="fuel_source" required>
                         </div>
+
                         <div class="col-md-4 mb-3">
-                          <input class="form-control" type="text" placeholder="Fuel Type" id="fuel_type" required>
+                          <label for="form-label " style="font-weight:600; font-size: medium;">
+                            Fuel Type
+                        </label>
+                          <input class="form-control mt-2" type="text" placeholder="Fuel Type" id="fuel_type" required>
                         </div>
+
                         <div class="col-md-4 mb-3">
-                          <input class="form-control" type="number" placeholder="Liters Used" id="fuel_liters_used" required>
+                          <label for="form-label " style="font-weight:600; font-size: medium;">
+                            Liters Used
+                        </label>
+                          <input class="form-control mt-2" type="number" placeholder="Liters Used" id="fuel_liters_used" required>
                         </div>
                       </div>
               
                       <!-- Scope 2: Electricity -->
-                      <h4>Purchased Electricity</h4>
+                      <h4 class="mb-3">Purchased Electricity</h4>
                       <div class="mb-3">
-                        <input class="form-control" type="number" placeholder="Electricity Used (kWh)" id="electricity_kwh" required>
+                        <label for="form-label " style="font-weight:600; font-size: medium;">
+                          Electricity Used
+                      </label>
+                        <input class="form-control mt-2" type="number" placeholder="Electricity Used (kWh)" id="electricity_kwh" required>
                       </div>
               
                       <!-- Scope 3: Travel -->
-                      <h4>Business Travel</h4>
+                      <h4 class="mb-3">Business Travel</h4>
                       <div class="row">
                         <div class="col-md-4 mb-3">
-                          <select class="form-select" id="travel_category" name="travel_category">
+                          <label for="form-label " style="font-weight:600; font-size: medium;">
+                           Category
+                        </label>
+                          <select class="form-select mt-2" id="travel_category" name="travel_category" required>
                             <option selected disabled>Category</option>
                             <option value="short">Short</option>
                             <option value="medium">Medium</option>
                             <option value="long">Long</option>
-                            <option value="unknown">Unknown</option>
+                            <option value="unknown">Unknown Distance</option>
                         </select>
                         
                         </div>
                         <div class="col-md-4 mb-3">
-                          <input class="form-control" type="number" placeholder="Total Distance (Miles)" id="travel_distance_miles" name="travel_distance_miles" required>
+                          <label for="form-label " style="font-weight:600; font-size: medium;">
+                            Total Disatance (Miles)
+                        </label>
+                          <input class="form-control mt-2" type="number" placeholder="Total Distance (Miles)" id="travel_distance_miles" name="travel_distance_miles" required>
                         </div>
+
                         <div class="col-md-4 mb-3">
-                          <input class="form-control" type="number" placeholder="Number of Trips" id="travel_number_of_trips" name="travel_number_of_trips" required>
+                          <label for="form-label " style="font-weight:600; font-size:medium;">
+                            Number of Trips
+                        </label>
+                          <input class="form-control mt-2" type="number" placeholder="Number of Trips" id="travel_number_of_trips" name="travel_number_of_trips" required>
                         </div>
+
+                        <div class="col-md-4 mb-3">
+                          <label for="form-label " style="font-weight:600; font-size:medium;">
+                            Date Recorded
+                        </label>
+                          <input class="form-control mt-2" type="date" placeholder="Date Recorded" id="date_recorded" name="date_recorded" required>
+                        </div>
+
+                        
                       </div>
               
                       <div class="text-center mt-4">

@@ -112,17 +112,36 @@
             </div>
             
             <div id="layoutSidenav_content">
-                <div class="container text-center my-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; max-width: fit-content; margin: 0 auto;" >
+                <div class="container my-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; max-width: fit-content; margin: 0 auto;" >
                     
-                    <h2>Company Form</h2>
+                    <h2 class="text-center mb-4">Company Form</h2>
 
                         <!-- Notifications -->
                     <div class="alert alert-success d-none" role="alert"></div>
                     <div class="alert alert-danger d-none" role="alert"></div>
 
                     <form id="form_company">
-                        <input class="form-control mb-2" type="text" placeholder="Company Name" aria-label="Company Name" id = "name" required>
-                        <input class="form-control mb-2" type="text" placeholder="Address" aria-label="Address" id = "location" required>
+
+                        
+                        <label for="form-label " style="font-weight:600; font-size: large;">
+                            Company Name
+                        </label>
+                        <input 
+                            class="form-control mb-4 mt-2" 
+                            type="text" 
+                            placeholder="Company Name" 
+                            aria-label="Name" 
+                            id="name" 
+                            name="name" 
+                            required
+                        >
+                        
+                        
+                        <label for="form-label " style="font-weight:600; font-size: large;">
+                            Address
+                        </label>
+                        <input class="form-control mb-4 mt-2" type="text" placeholder="Address" aria-label="Address" id = "location" required>
+
                         <button type="submit" class="custom-button">Save</button>
                     </form>
                 </div>

@@ -1,69 +1,101 @@
-
 import { backendURL, successNotification, errorNotification } from '../utils/utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector("#form_tree-growth"); // Change this line
+    const form = document.querySelector("#form_tree-growth");
+    const plantationSelect = document.querySelector("#plantation_id");
 
     if (!form) {
         console.error("Form not found!");
-        return; 
+        return;
     }
 
-    form.onsubmit = async (e) => {
-        e.preventDefault();
-        
-        // Get the form data
-        const dbh = document.getElementById("dbh").value;
-        const height = document.getElementById("height").value;
-        const latitude = document.getElementById("latitude").value;
-        const longitude = document.getElementById("longitude").value;
-
-        // Basic validation
-        if (!dbh || !height || !latitude || !longitude) {
-            errorNotification("Please fill in all fields.", 5);
-            return;
-        }
-
+    // Load plantations into the dropdown
+    async function loadPlantations() {
         try {
             const token = localStorage.getItem('token');
 
             if (!token) {
-                errorNotification("No authentication token found. Please log in.", 5);
+                errorNotification("Authentication token missing. Please log in.");
                 return;
             }
 
+            const response = await fetch(`${backendURL}/api/plantation`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch plantations");
+
+            const plantations = await response.json();
+
+            if (!plantations.length) {
+                errorNotification("No plantations found. Please create one first.");
+                return;
+            }
+
+            plantations.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `Plantation ${p.id} - ${p.area_planted} ha`;
+                plantationSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading plantations:", error);
+            errorNotification("Could not load plantation list.");
+        }
+    }
+
+    loadPlantations(); // Call on DOM ready
+
+    // Handle Tree Growth Form Submission
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            errorNotification("No authentication token found. Please log in.", 5);
+            return;
+        }
+
+        console.log("Stored token:", token); // Debugging token
+
+        try {
             const response = await fetch(`${backendURL}/api/tree-growth`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     "Accept": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    dbh,
-                    height,
-                    latitude,
-                    longitude
-                }),
+                body: formData,
             });
 
-            const contentType = response.headers.get("content-type");
+            console.log("Response status:", response.status); // Debugging status code
+
+            const text = await response.text();
+            console.log("Raw response text:", text); // Log raw response
+
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (err) {
+                errorNotification("Unexpected HTML response. Check if the route is correct or if you are authenticated.", 5);
+                return;
+            }
 
             if (!response.ok) {
-                const errorJson = await response.json();
-                console.error("Validation Error:", errorJson);
-                if (errorJson.errors) {
-                    const details = Object.values(errorJson.errors).flat().join('<br>');
+                if (data.errors) {
+                    const details = Object.values(data.errors).flat().join('<br>');
                     errorNotification(details, 5);
                 } else {
-                    errorNotification(errorJson.message || "Validation failed", 5);
+                    errorNotification(data.message || "Validation failed", 5);
                 }
                 return;
             }
 
-            const data = await response.json();
             console.log("Success:", data);
-
             successNotification("Tree growth data recorded successfully.", 5);
             form.reset();
 

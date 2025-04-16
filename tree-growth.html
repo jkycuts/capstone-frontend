@@ -108,19 +108,51 @@
             </div>
             <div id="layoutSidenav_content">
 
-                <div class="container text-center my-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; max-width: fit-content; margin: 0 auto;" >
+                <div class="container  my-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; max-width: fit-content; margin: 0 auto;" >
                     
-                    <h2>Tree Growth</h2>
+                    <h2 class="text-center mb-3">Tree Growth</h2>
 
                         <!-- Notifications -->
                     <div class="alert alert-success d-none" role="alert"></div>
                     <div class="alert alert-danger d-none" role="alert"></div>
 
                     <form id="form_tree-growth">
-                        <input class="form-control mb-2" type="number" placeholder="Diameter at Breast Height (cm)" aria-label=" dbh" id = "dbh" required>
-                        <input class="form-control mb-2" type="number" placeholder="Tree Height (m)" aria-label="height" id = "height" required>
-                        <input class="form-control mb-2" type="number" placeholder="Latitude" aria-label="latitude" id = "latitude" step="0.1" required>
-                        <input class="form-control mb-2" type="number" placeholder="Longitude" aria-label="longitude" id = "longitude" step="0.1" required>
+                        <label for="plantation_id">Select Plantation:</label>
+                            <select id="plantation_id" name="plantation_id" required>
+                                <option value="">-- Select Plantation --</option>
+                                <!-- Options will be loaded dynamically -->
+                            </select>
+                            
+                        <label for="form-label " style="font-weight:600; font-size: large;">
+                            Species
+                        </label>
+                        <input class="form-control mb-2 mt-2" type="text" placeholder="Species" aria-label="species" id = "species" name="species" required>
+
+                        <label for="form-label " style="font-weight:600; font-size: large;">
+                            Diameter at Breast Height (cm)
+                        </label>
+                        <input class="form-control mb-2 mt-2" type="number" placeholder="Diameter at Breast Height (cm)" aria-label=" dbh" id = "dbh" name="dbh" required>
+
+                        <label for="form-label " style="font-weight:600; font-size: large;">
+                            Tree Height (m)
+                        </label>
+                        <input class="form-control mb-2 mt-2" type="number" placeholder="Tree Height (m)" aria-label="height" id = "height" name="height" required>
+
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label ">Geotagged Photos</label>
+                            <input class="form-control" type="file" id="geotag_photos" name="geotag_photos" aria-label="geotag_photos" required>
+                          </div>
+                        
+                          <label for="form-label " style="font-weight:600; font-size: large;">
+                            Latitude
+                        </label>
+                        <input class="form-control mb-2 mt-2" type="number" placeholder="Latitude" aria-label="latitude" id = "latitude" step="0.1" name="latitude" required>
+
+                        <label for="form-label " style="font-weight:600; font-size: large;">
+                            Longitude
+                        </label>
+                        <input class="form-label mb-2 mt-2" type="number" placeholder="Longitude" aria-label="longitude" id = "longitude" step="0.1" name="longitude" required>
+
                         <button type="submit" class="custom-button">Save</button>
                     </form>
                 </div>

@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form_company = document.getElementById("form_company");
 
     if (!form_company) {
-        console.warn("form_company not found");
+        // console.warn("form_company not found");
         return;
     }
 

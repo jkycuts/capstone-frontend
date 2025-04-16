@@ -1,51 +1,54 @@
-
 import { backendURL, successNotification, errorNotification } from '../utils/utils.js';
 
+document.addEventListener("DOMContentLoaded", () => {
+    const form_company = document.getElementById("form_plantation");
 
-form_plantation.onsubmit = async function (e) {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("area_planted", document.getElementById("area_planted").value);
-    formData.append("seedlings_planted", document.getElementById("seedlings_planted").value);
-    formData.append("plantation_age", document.getElementById("plantation_age").value);
-    formData.append("geotag_photos", document.getElementById("geotag_photos").files[0]);
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-        errorNotification("No authentication token found. Please log in.", 5);
+    if (!form_company) {
+        // console.warn("form_plantation not found");
         return;
     }
 
-    try {
-        const response = await fetch(`${backendURL}/api/plantation`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
-            body: formData
-        });
+    form_company.onsubmit = async function (e) {
+        e.preventDefault();
 
-        if (!response.ok) {
-            const errorJson = await response.json();
-            console.error("Validation Error:", errorJson);
-            if (errorJson.errors) {
-                const details = Object.values(errorJson.errors).flat().join('<br>');
-                errorNotification(details, 5);
-            } else {
-                errorNotification(errorJson.message || "Validation failed", 5);
+        const area_planted = document.getElementById("area_planted").value;
+        const seedlings_planted = document.getElementById("seedlings_planted").value;
+        const plantation_age = document.getElementById("plantation_age").value;
+        const date_recorded = document.getElementById("date_recorded").value;
+
+        try {
+            const response = await fetch(`${backendURL}/api/plantation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ area_planted, seedlings_planted, plantation_age, date_recorded }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 422) {
+                    let errorMsg = Object.values(data.errors).flat().join('<br>');
+                    errorNotification(errorMsg, 5);
+                } else {
+                    errorNotification(data.message || "Server error occurred", 5);
+                }
+                return;
             }
-            return;
+
+            successNotification("Plantation created successfully", 5);
+            form_company.reset();
+
+            // Delay then redirect
+            setTimeout(() => {
+                window.location.href = "/tree-growth.html"; // Modify path as needed
+            }, 3000);
+
+        } catch (error) {
+            console.error("Client Error:", error);
+            errorNotification("Unexpected error occurred", 5);
         }
-
-        const data = await response.json();
-        console.log("Success:", data);
-
-        successNotification("Plantation recorded successfully.", 5);
-        form_plantation.reset();
-
-    } catch (error) {
-        console.error("Client Error:", error);
-        errorNotification("Unexpected client error occurred. Please check console for details.", 5);
-    }
-};
+    };
+});
