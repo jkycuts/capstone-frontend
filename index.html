@@ -6,10 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Dashboard - GreenGauge</title>
         
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
         <script type="module" src="js/dashboard/dashboard.js"></script>
 
@@ -46,6 +49,16 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
+
+                            <!-- Add this inside the <body> tag -->
+                        <div id="loading_indicator" class="d-none">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+
+
                             <div class="sb-sidenav-menu-heading">Form</div>
                             <a class="nav-link collapsed" href="company-form.html" >
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard"></i></div>
@@ -110,39 +123,52 @@
                 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-2">Dashboard</h1>
-                    
-                        <!-- <div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h4>Company: <span id="company-name">Loading...</span></h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Annual Carbon Emission (TCO₂):</h5>
-                    <p id="annual-emission">Loading...</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>Annual Carbon Sequestration (TCO₂):</h5>
-                    <p id="annual-sequestration">Loading...</p>
-                </div>
-            </div>
 
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <h5>Carbon Neutrality Variance (TCO₂):</h5>
-                    <p id="neutrality-variance">Loading...</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>Percentage of National GHG Contribution:</h5>
-                    <p id="ghg-contribution">Loading...</p>
-                </div>
-            </div>
-        </div> -->
-    </div>
+                        
+                        <div class="container-fluid px-4">
+                            <h1 class="mt-4">Annual Summary</h1>
+                        
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <label for="year_select" class="form-label">Select Year:</label>
+                                    <select id="year_select" class="form-select mb-3">
+                                        <!-- Years will be populated here -->
+                                    </select>
+                                    <button id="generate_summary" class="btn btn-primary">Generate Summary</button>
+                                </div>
+                            </div>
+                        
+                            <div id="message_area"></div>
+                        
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-table me-1"></i>
+                                    Annual Summary Report
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered" id="summary_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Company</th>
+                                                <th>Emission (TCO₂)</th>
+                                                <th>Sequestration (TCO₂)</th>
+                                                <th>Variance</th>
+                                                <th>% PH GHG</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="summary_body">
+                                            <!-- Data rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <script type="module" src="js/summary/annual-summary.js"></script>
+                        
 
-    <script type="module" src="/js/summary/annual-summary.js"></script>
-</div>
                         
                         
                         

@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return errorNotification(data.error);
             }
 
+            // Ensure there's sequestration data
             if (!data.tree_sequestration_details || data.tree_sequestration_details.length === 0) {
                 treeTableBody.innerHTML = `<tr><td colspan="10" class="text-center">No tree data available.</td></tr>`;
                 sequestrationData.classList.remove('d-none');
@@ -73,11 +74,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            totalSequestration.textContent = data.total_carbon_sequestration_kg;
+            // Update total sequestration value
+            totalSequestration.textContent = (data.total_carbon_sequestration_kg || 0).toFixed(2);
+
+            // Clear previous table data and insert new rows
             treeTableBody.innerHTML = '';
 
             data.tree_sequestration_details.forEach(tree => {
-                const CO2_sequestration_in_ton = (tree.CO2_sequestration_kg / 1000).toFixed(2);
+                const CO2_sequestration_in_ton = (tree.CO2_sequestration_kg / 1000).toFixed(2);  // Convert to tons
                 const row = `
                     <tr>
                         <td>${tree.tree_id}</td>
@@ -107,5 +111,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Load plantation options when the page is ready
     loadPlantations();
 });

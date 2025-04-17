@@ -58,10 +58,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
             submitBtn.disabled = true;
 
+            // Define emission factors for each fuel type
+            const emissionFactors = {
+                'diesel': { 'co2': 2.712681, 'ch4': 0.000143, 'n2o': 0.000143 },
+                'biodiesel': { 'co2': 0.0, 'ch4': 0.000382, 'n2o': 0.000872 },
+                'ethanol': { 'co2': 0.0, 'ch4': 0.0001, 'n2o': 0.0001 },
+                'gasoline': { 'co2': 2.297040, 'ch4': 0.000671, 'n2o': 0.000210 }
+            };
+
+            // Retrieve the emission factors for the selected fuel type
+            const fuelEmissionsFactor = emissionFactors[fuel_type];
+            if (!fuelEmissionsFactor) {
+                errorNotification("Invalid fuel type selected.", 5);
+                return;
+            }
+
+            // Calculate emissions for fuel consumption (in CO2e)
+            const fuelEmissions = parsedFuelLiters * fuelEmissionsFactor.co2 +
+                                  parsedFuelLiters * fuelEmissionsFactor.ch4 +
+                                  parsedFuelLiters * fuelEmissionsFactor.n2o;
+
+            // Calculate electricity emissions (in CO2e)
+            const electricityMWh = parsedElectricityKwh / 1000; // Convert kWh to MWh
+            const electricityEmissionFactor = 0.496; // Emission factor for electricity in CO2e per MWh
+            const electricityEmissions = electricityMWh * electricityEmissionFactor;
+
+            // Calculate business travel emissions (in CO2e)
+            const travelEmissionFactors = {
+                'co2': 0.277, // CO2 per mile
+                'ch4': 0.0000104, // CH4 per mile
+                'n2o': 0.0000085 // N2O per mile
+            };
+            const activityData = parsedTravelTrips * parsedTravelDistance; // Total distance traveled in miles
+            const travelCo2 = activityData * travelEmissionFactors.co2;
+            const travelCh4 = activityData * travelEmissionFactors.ch4;
+            const travelN2o = activityData * travelEmissionFactors.n2o;
+            const totalTravelEmissionsKg = travelCo2 + travelCh4 + travelN2o;
+            const totalTravelEmissions = totalTravelEmissionsKg / 1000; // Convert kg to metric tons
+
+            // Calculate total emissions for the period
+            const totalEmissions = fuelEmissions + electricityEmissions + totalTravelEmissions;
+
             const response = await fetch(`${backendURL}/api/ghg-emission`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json", // ✅ Important fix
+                    "Content-Type": "application/json",
                     "Accept": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
@@ -75,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     travel_category,
                     travel_number_of_trips: parsedTravelTrips,
                     travel_distance_miles: parsedTravelDistance,
+                    total_emissions: totalEmissions,
                     date_recorded,
                 })
             });
