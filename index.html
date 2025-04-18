@@ -18,6 +18,10 @@
 
         <script src="js/utils/script.js"></script>
 
+        <style>
+            .box { border: 1px solid #ccc; padding: 1rem; margin: 1rem; width: 200px; display: inline-block; text-align: center; }
+        </style>
+
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark ">
@@ -124,61 +128,20 @@
                     <div class="container-fluid px-4">
                         <h1 class="mt-2">Dashboard</h1>
 
-                        
-                        <div class="container-fluid px-4">
-                            <h1 class="mt-4">Annual Summary</h1>
-                        
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <!-- Year Selection -->
-                                    <label for="year_select" class="form-label">Select Year:</label>
-                                    <select id="year_select" class="form-select mb-3">
-                                        <!-- Years will be populated here -->
-                                    </select>
-                        
-                                    <!-- Quarter Selection -->
-                                    <label for="quarter_select" class="form-label">Select Quarter:</label>
-                                    <select id="quarter_select" class="form-select mb-3">
-                                        <option value="Q1">Q1 (Jan-Mar)</option>
-                                        <option value="Q2">Q2 (Apr-Jun)</option>
-                                        <option value="Q3">Q3 (Jul-Sep)</option>
-                                        <option value="Q4">Q4 (Oct-Dec)</option>
-                                    </select>
-                        
-                                    <button id="generate-summary" class="btn btn-primary">Generate Summary</button>
-                                </div>
-                            </div>
-                        
-                            <div id="message_area"></div>
-                        
-                            <div class="card">
-                                <div class="card-header">
-                                    <i class="fas fa-table me-1"></i>
-                                    Annual Summary Report
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-bordered" id="summary_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Year</th>
-                                                <th>Quarter</th>
-                                                <th>Company</th>
-                                                <th>Emission (TCO₂)</th>
-                                                <th>Sequestration (TCO₂)</th>
-                                                <th>Variance</th>
-                                                <th>% PH GHG</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="summary_body">
-                                            <!-- Data rows will be populated here -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                         <!-- Notifications -->
+                        <div class="alert alert-success d-none" role="alert"></div>
+                        <div class="alert alert-danger d-none" role="alert"></div>
+
+                        <div>
+                            <h2>Dashboard Summary</h2>
+                            <p><strong>Total GHG Emission: </strong><span id="totalEmission">Loading...</span></p>
+                            <p><strong>Total Carbon Sequestration: </strong><span id="totalSequestration">Loading...</span></p>
+                            <p><strong>Carbon Neutrality Variance: </strong><span id="carbonVariance">Loading...</span></p>
+                            <p><strong>Percentage of National GHG Contribution: </strong><span id="percentageGHG">Loading...</span></p>
                         </div>
                         
                         
-                        <script type="module" src="js/summary/annual-summary.js"></script>
+                        
                         
 
                         
