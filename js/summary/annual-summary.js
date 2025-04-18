@@ -1,135 +1,65 @@
 import { backendURL, errorNotification, successNotification } from '../utils/utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-    populateYearOptions();
-    AnnualSummary();
-
-    document.getElementById("generate_summary").addEventListener("click", generate);
-});
-
-function populateYearOptions() {
     const yearSelect = document.getElementById("year_select");
-    const currentYear = new Date().getFullYear();
+    const quarterSelect = document.getElementById("quarter_select"); // New dropdown for quarters
+    const summaryBody = document.getElementById("summary_body");
+    const messageArea = document.getElementById("message_area");
 
-    for (let year = currentYear; year >= currentYear - 10; year--) {
+    // Populate the year dropdown from current year to 10 years back
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= currentYear - 10; y--) {
         const option = document.createElement("option");
-        option.value = year;
-        option.text = year;
+        option.value = y;
+        option.textContent = y;
         yearSelect.appendChild(option);
     }
-}
 
-function AnnualSummary() {
-    showLoading();
-    fetch(`${backendURL}/api/annual-summary/generate`, {
-        method: 'GET',
-        headers: {
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+    // On click: fetch annual summary data for the selected year and quarter
+    document.getElementById("generate-summary").addEventListener("click", () => {
+        const selectedYear = yearSelect.value;
+        const selectedQuarter = quarterSelect.value;
+
+        if (!selectedYear || !selectedQuarter) {
+            messageArea.innerHTML = `<div class="alert alert-warning">Please select both year and quarter.</div>`;
+            return;
         }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("API response:", data);
 
-            if (!data || !data.data || !Array.isArray(data.data)) {
-                showMessage("Invalid data format from server.", "danger");
-                return;
-            }
+        // Show loading state
+        messageArea.innerHTML = `<div class="alert alert-info">Loading summary for ${selectedYear} ${selectedQuarter}...</div>`;
+        summaryBody.innerHTML = `<tr><td colspan="7" class="text-center">Loading...</td></tr>`;
 
-            const summaries = data.data;
-            const tbody = document.getElementById("summary_body");
-            tbody.innerHTML = "";
+        // Fetch data from API for the selected year and quarter
+        fetch(`${backendURL}/api/annual-summary?year=${selectedYear}&quarter=${selectedQuarter}`)
+            .then(response => response.json())
+            .then(data => {
+                messageArea.innerHTML = ""; // Clear any messages
+                summaryBody.innerHTML = "";
 
-            if (summaries.length === 0) {
-                showMessage("No summaries available.", "info");
-            }
+                if (!data || data.length === 0) {
+                    summaryBody.innerHTML = `<tr><td colspan="7" class="text-center">No summary found for ${selectedYear} ${selectedQuarter}.</td></tr>`;
+                    return;
+                }
 
-            summaries.forEach(summary => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${summary.year}</td>
-                    <td>${summary.company_name}</td>
-                    <td>${summary.annual_carbon_emission.toFixed(2)}</td>
-                    <td>${summary.annual_carbon_sequestration.toFixed(2)}</td>
-                    <td>${summary.carbon_neutrality_variance.toFixed(2)}</td>
-                    <td>${summary.percentage_ghg_contribution.toFixed(4)}%</td>
+                // Populate table rows with aggregated data
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${data.year}</td>
+                    <td>${data.quarter}</td>
+                    <td>${data.company_name}</td>
+                    <td>${data.total_tco2.toFixed(3)}</td>
+                    <td>${data.carbon_sequestered_tco2.toFixed(3)}</td>
+                    <td>${data.carbon_neutrality_variance.toFixed(3)}</td>
+                    <td>${data.ghg_country_percent.toFixed(2)}%</td>
                 `;
-                tbody.appendChild(row);
+                summaryBody.appendChild(tr);
+            })
+            .catch(error => {
+                console.error("Error fetching summary:", error);
+                messageArea.innerHTML = `<div class="alert alert-danger">Failed to load annual summary. Please try again later.</div>`;
+                summaryBody.innerHTML = "";
             });
-        })
-        .catch(error => {
-            console.error("Error fetching summaries:", error);
-            showMessage(`Error fetching summaries: ${error.message}`, "danger");
-        })
-        .finally(() => hideLoading());
-}
-
-function generate() {
-    const selectedYear = document.getElementById("year_select").value;
-
-    showLoading();
-
-    fetch(`${backendURL}/api/annual-summary/generate`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-        },
-        body: JSON.stringify({ year: parseInt(selectedYear) })
-    })
-        .then(response => response.text())  // Log the raw response first for debugging
-        .then(responseText => {
-            console.log('Raw response:', responseText);
-            try {
-                const body = JSON.parse(responseText);
-                return { status: response.status, body };
-            } catch (e) {
-                console.error('Error parsing response:', e);
-                throw new Error('Failed to parse response.');
-            }
-        })
-        .then(({ status, body }) => {
-            if (status >= 200 && status < 300) {
-                showMessage(body.message || "Summary generated successfully.", "success");
-                fetchAnnualSummary();
-            } else {
-                showMessage(body.message || "Failed to generate summary.", "warning");
-            }
-        })
-        .catch(error => {
-            console.error("Generation error:", error);
-            showMessage(`Failed to generate summary: ${error.message}`, "danger");
-        })
-        .finally(() => hideLoading());
-}
-
-function showMessage(message, type = "info") {
-    const messageArea = document.getElementById("message_area");
-    messageArea.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-}
-
-function showLoading() {
-    const loadingIndicator = document.getElementById("loading_indicator");
-    if (loadingIndicator) {
-        loadingIndicator.classList.remove("d-none");  // Show loading indicator
-    }
-}
-
-function hideLoading() {
-    const loadingIndicator = document.getElementById("loading_indicator");
-    if (loadingIndicator) {
-        loadingIndicator.classList.add("d-none");  // Hide loading indicator
-    }
-}
+    });
+});
 
 

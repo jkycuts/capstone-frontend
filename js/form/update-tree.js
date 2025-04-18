@@ -42,8 +42,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error(errorData.message || 'Failed to update tree data');
             }
 
+            const result = await response.json();
+
             successNotification("Tree data updated successfully.");
             await reloadTreeData(treeId);
+
+            // Store plantation_id to refresh correct data in dashboard
+            if (result.plantation_id) {
+                localStorage.setItem('refresh_plantation_id', result.plantation_id);
+            }
 
             // Redirect after successful update
             setTimeout(() => {
@@ -86,7 +93,6 @@ async function reloadTreeData(treeId) {
             imagePreview.classList.add('d-none');
         }
 
-
         form.classList.remove('d-none');
     } catch (error) {
         console.error(error);
@@ -94,7 +100,6 @@ async function reloadTreeData(treeId) {
         errorAlert.classList.remove('d-none');
     }
 }
-
 
 function getTreeIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
