@@ -141,15 +141,28 @@
                             <input class="form-control" type="file" id="geotag_photos" name="geotag_photos" aria-label="geotag_photos" required>
                           </div>
                         
-                          <label for="form-label " style="font-weight:600; font-size: large;">
+                          <label for="latitude " style="font-weight:600; font-size: large;">
                             Latitude
                         </label>
-                        <input class="form-control mb-2 mt-2" type="number" placeholder="Latitude" aria-label="latitude" id = "latitude" step="0.1" name="latitude" required>
+                        <input class="form-control mb-2 mt-2" 
+                                type="number" placeholder="Latitude" 
+                                aria-label="latitude" 
+                                id = "latitude" 
+                                step="0.000001" 
+                                name="latitude" 
+                                required>
 
-                        <label for="form-label " style="font-weight:600; font-size: large;">
+                        <label for="longitude " style="font-weight:600; font-size: large;">
                             Longitude
                         </label>
-                        <input class="form-label mb-2 mt-2" type="number" placeholder="Longitude" aria-label="longitude" id = "longitude" step="0.1" name="longitude" required>
+                        <input class="form-label mb-2 mt-2" 
+                                type="number" 
+                                placeholder="Longitude" 
+                                aria-label="longitude" 
+                                id = "longitude" 
+                                step="0.000001" 
+                                name="longitude" 
+                                required>
 
                         <button type="submit" class="custom-button">Save</button>
                     </form>

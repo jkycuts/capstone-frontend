@@ -12,6 +12,8 @@
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 
         <script type="module" src="js/dashboard/dashboard.js"></script>
@@ -23,7 +25,7 @@
         </style>
 
     </head>
-    <body class="sb-nav-fixed">
+    <body class="sb-nav-fixed" data-page="dashboard">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark ">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
@@ -125,30 +127,46 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
+                    <div class="container-fluid px-4 mb-4">
                         <h1 class="mt-2">Dashboard</h1>
 
                          <!-- Notifications -->
                         <div class="alert alert-success d-none" role="alert"></div>
                         <div class="alert alert-danger d-none" role="alert"></div>
 
-                        <div>
-                            <h2>Dashboard Summary</h2>
-                            <p><strong>Total GHG Emission: </strong><span id="totalEmission">Loading...</span></p>
-                            <p><strong>Total Carbon Sequestration: </strong><span id="totalSequestration">Loading...</span></p>
-                            <p><strong>Carbon Neutrality Variance: </strong><span id="carbonVariance">Loading...</span></p>
-                            <p><strong>Percentage of National GHG Contribution: </strong><span id="percentageGHG">Loading...</span></p>
+                        <!-- Dashboard Summary -->
+                        <div class="bg-white p-6 rounded-xl shadow mb-8">
+                            <h2 id="carbonStatus" class="text-lg font-semibold mb-4"></h2>
+                            <!-- Existing Cards Here -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                                <div class="bg-white p-4 shadow rounded-xl">
+                                    <p class="text-gray-500 font-semibold">Total GHG Emission</p>
+                                    <h2 id="totalEmission" class="text-2xl font-bold text-red-500">Loading...</h2>
+                                </div>
+                                <div class="bg-white p-4 shadow rounded-xl">
+                                    <p class="text-gray-500 font-semibold">Total Carbon Sequestration</p>
+                                    <h2 id="totalSequestration" class="text-2xl font-bold text-green-600">Loading...</h2>
+                                </div>
+                                <div class="bg-white p-4 shadow rounded-xl">
+                                    <p class="text-gray-500 font-semibold">Carbon Neutrality Variance</p>
+                                    <h2 id="carbonVariance" class="text-2xl font-bold text-yellow-600">Loading...</h2>
+                                </div>
+                                <div class="bg-white p-4 shadow rounded-xl">
+                                    <p class="text-gray-500 font-semibold">% of National GHG Contribution</p>
+                                    <h2 id="percentageGHG" class="text-2xl font-bold text-blue-600">Loading...</h2>
+                                </div>
+                            </div>
                         </div>
-                        
-                        
-                        
-                        
 
                         
-                        
-                        
-                       
+
+
+                                                
+                                                
+                                                
+                                            
                 </main>
+                
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

@@ -34,7 +34,6 @@ async function loadGHGInventory() {
                     <td>${record.fuel_liters_used}</td>
                     <td>${record.electricity_kwh}</td>
                     <td>${record.travel_category}</td>
-                    <td>${record.travel_number_of_trips}</td>
                     <td>${record.travel_distance_miles}</td>
                     <td>${parseFloat(record.fuel_tco2 || 0).toFixed(4)}</td>
                     <td>${parseFloat(record.electricity_tco2 || 0).toFixed(4)}</td>

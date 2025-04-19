@@ -19,13 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const fuel_liters_used = document.getElementById("fuel_liters_used").value;
         const electricity_kwh = document.getElementById("electricity_kwh").value;
         const travel_category = document.getElementById("travel_category").value;
-        const travel_number_of_trips = document.getElementById("travel_number_of_trips").value;
         const travel_distance_miles = document.getElementById("travel_distance_miles").value;
         const date_recorded = document.getElementById("date_recorded").value;
 
         // Basic required fields check
         if (!year || !quarter || !fuel_source || !fuel_type || !fuel_liters_used ||
-            !electricity_kwh || !travel_category || !travel_number_of_trips || !travel_distance_miles) {
+            !electricity_kwh || !travel_category || !travel_distance_miles) {
             errorNotification("Please fill in all required fields.", 5);
             return;
         }
@@ -33,10 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Parse and validate numeric values
         const parsedFuelLiters = parseFloat(fuel_liters_used);
         const parsedElectricityKwh = parseFloat(electricity_kwh);
-        const parsedTravelTrips = parseInt(travel_number_of_trips);
         const parsedTravelDistance = parseFloat(travel_distance_miles);
 
-        if (isNaN(parsedFuelLiters) || isNaN(parsedElectricityKwh) || isNaN(parsedTravelTrips) || isNaN(parsedTravelDistance)) {
+        if (isNaN(parsedFuelLiters) || isNaN(parsedElectricityKwh) || isNaN(parsedTravelDistance)) {
             errorNotification("Please ensure all numerical fields are valid.", 5);
             return;
         }
@@ -89,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 'ch4': 0.0000104, // CH4 per mile
                 'n2o': 0.0000085 // N2O per mile
             };
-            const activityData = parsedTravelTrips * parsedTravelDistance; // Total distance traveled in miles
+            const activityData = parsedTravelDistance; // Total distance traveled in miles
             const travelCo2 = activityData * travelEmissionFactors.co2;
             const travelCh4 = activityData * travelEmissionFactors.ch4;
             const travelN2o = activityData * travelEmissionFactors.n2o;
@@ -114,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     fuel_liters_used: parsedFuelLiters,
                     electricity_kwh: parsedElectricityKwh,
                     travel_category,
-                    travel_number_of_trips: parsedTravelTrips,
                     travel_distance_miles: parsedTravelDistance,
                     total_emissions: totalEmissions,
                     date_recorded,
@@ -141,12 +138,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const emissions = data.emissions;
             successNotification(
                 `GHG emission recorded successfully.<br>
-                <b>Total Emission:</b> ${emissions.total_tco2.toFixed(3)} TCO₂<br>
-                <b>Fuel:</b> ${emissions.fuel_tco2.toFixed(3)}<br>
-                <b>Electricity:</b> ${emissions.electricity_tco2.toFixed(3)}<br>
-                <b>Travel:</b> ${emissions.business_travel_tco2.toFixed(3)}`,
+                <b>Total Emission:</b> ${(emissions.total_tco2 ?? 0).toFixed(3)} TCO₂<br>
+                <b>Fuel:</b> ${(emissions.fuel_tco2 ?? 0).toFixed(3)}<br>
+                <b>Electricity:</b> ${(emissions.electricity_tco2 ?? 0).toFixed(3)}<br>
+                <b>Travel:</b> ${(emissions.business_travel_tco2 ?? 0).toFixed(3)}`,
                 5
             );
+            
 
             form_ghg_emission.reset();
 

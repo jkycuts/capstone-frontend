@@ -38,6 +38,11 @@ async function getLoggedUser() {
 }
 getLoggedUser();
 
+
+
+
+
+
 // Fetch Dashboard Data (GHG Emission, Carbon Sequestration, etc.)
 async function getDashboardData() {
     const token = localStorage.getItem("token");
@@ -76,6 +81,10 @@ async function getDashboardData() {
                 carbonVarianceElement.textContent = `${data.carbon_variance} TCO₂`;
                 percentageGHGElement.textContent = `${data.percentage_contribution}%`;
 
+              
+
+                
+
                 successNotification('Dashboard data loaded successfully!', 5);
             } else {
                 errorNotification("Dashboard elements not found in HTML.", 10);
@@ -87,7 +96,11 @@ async function getDashboardData() {
         console.error("Error fetching dashboard data:", error);
         errorNotification("Error fetching dashboard data.", 10);
     }
-}
 
+
+
+}
 // Call the function to populate the dashboard data on page load
-getDashboardData();
+if (document.body.dataset.page === "dashboard") {
+    getDashboardData();
+}
