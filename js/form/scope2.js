@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(data.message || "Failed to submit electricity emission");
             }
 
-            successNotification(`Electricity emission recorded: <b>${total_emissions.toFixed(3)}</b> TCO₂`, 5);
+            successNotification(`Electricity Emission Recorded`);
             form.reset();
 
             setTimeout(() => window.location.href = "/scope2-table.html", 3000);

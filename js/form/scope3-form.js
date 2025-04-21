@@ -23,10 +23,35 @@ document.addEventListener("DOMContentLoaded", function () {
             const travel_distance_miles = parseFloat(document.getElementById("travel_distance_miles").value);
 
            
+                // Example travel distance in miles
+                const activity_data = travel_distance_miles;
 
-            const mwh = travel_distance_miles / 1000;
-            const factor = 0.496;
-            const electricityEmissions = mwh * factor;
+                // Choose emission factor based on travel distance
+                let co2_factor;
+
+                if (activity_data <= 300) {
+                    co2_factor = 0.277; // Short haul
+                } else if (activity_data > 300 && activity_data <= 700) {
+                    co2_factor = 0.229; // Medium haul
+                } else {
+                    co2_factor = 0.185; // Long haul
+                }
+
+                // GWP values (can be fetched from backend if needed)
+                const gwp = {
+                    co2: 1,
+                    ch4: 25,
+                    n2o: 298
+                };
+
+                // Apply formulas
+                const travel_co2 = activity_data * co2_factor * gwp.co2;
+                const travel_ch4 = activity_data * 0.0000104 * gwp.ch4;
+                const travel_n2o = activity_data * 0.0000085 * gwp.n2o;
+
+                const travel_total_kg = travel_co2 + travel_ch4 + travel_n2o;
+                const total_emissions = travel_total_kg / 1000; // Convert to metric tons
+
 
             try {
                 const res = await fetch(`${backendURL}/api/ghg-emission/travel`, {
@@ -39,17 +64,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         year,
                         travel_type,
                         travel_distance_miles,
-                        total_emissions: electricityEmissions
+                        total_emissions
                     })
                 });
 
                 const data = await res.json();
 
                 if (!res.ok) {
-                    throw new Error(data.message || "Failed to submit electricity emission");
+                    throw new Error(data.message || "Failed to submit Air Travel Emission",5);
                 }
 
-                successNotification(`Electricity emission recorded. <b>${electricityEmissions.toFixed(3)}</b> TCO₂`, 5);
+                successNotification(`Air Travel Emission Recorded`);
 
                 // Reset the form after successful submission
                 document.getElementById('form_scope3_travel').reset();
@@ -58,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(() => window.location.href = "/scope3-table.html", 3000);
             } catch (err) {
                 console.error("Electricity Scope Error:", err);
-                errorNotification(err.message || "Failed to submit electricity emission", 5);
+                errorNotification(err.message || "Failed to submit Air Travel Emission", 5);
             }
         });
     } else {

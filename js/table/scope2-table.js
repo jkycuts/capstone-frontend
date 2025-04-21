@@ -42,7 +42,7 @@ async function loadScope2Emissions() {
             const row = `
                 <tr>
                     <td>${year}</td>
-                    <td>${record.electricity_kwh}</td>
+                    <td>${record.emission_tco2e}</td>
                 </tr>
             `;
             tableBody.insertAdjacentHTML('beforeend', row);

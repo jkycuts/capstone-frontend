@@ -20,8 +20,6 @@ async function loadGHGSummary() {
         console.log("Scope 2:", scope2);
         console.log("Scope 3:", scope3);
 
-
-
         const summaryData = {
             'Scope 1': summarize(scope1),
             'Scope 2': summarize(scope2),
@@ -29,6 +27,8 @@ async function loadGHGSummary() {
         };
 
         renderSummary(summaryData);
+
+        
 
     } catch (err) {
         console.error("Failed to load summary data:", err);
@@ -105,4 +105,13 @@ function renderSummary(data) {
     document.getElementById('year_total_2023').textContent = totalsByYear[2023].toFixed(3);
     document.getElementById('year_total_2024').textContent = totalsByYear[2024].toFixed(3);
     document.getElementById('overall_total').textContent = overallTotal.toFixed(3);
+
+    // ✅ Update dashboard GHG emission display
+    const totalDisplay = document.getElementById('total_ghg_emission');
+    if (totalDisplay) {
+        totalDisplay.textContent = overallTotal.toLocaleString(undefined, {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3
+        }) + ' tCO₂e';
+    }
 }

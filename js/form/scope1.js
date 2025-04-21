@@ -12,7 +12,6 @@ document.getElementById('form_scope1_fuel').addEventListener('submit', async fun
         return;
     }
 
-  
 
     // Get form values
     const year = document.getElementById('year').value;
