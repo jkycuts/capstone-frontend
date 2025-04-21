@@ -16,7 +16,7 @@
 
     </head>
     <body class="bg-secondary">
-        <div id="layoutAuthentication">
+        <div id="layoutAuthentication" class="d-flex flex-column min-vh-100">
             <div id="layoutAuthentication_content">
                 <main>
                     <div class="container">
@@ -25,9 +25,8 @@
                                 <!-- Login Card -->
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header">
-                                        <h3 class="text-center font-weight-light my-4">
-                                        Login - GreenGauge
-                                    </h3></div>
+                                        <h3 class="text-center font-weight-light my-4">Login - GreenGauge</h3>
+                                    </div>
                                     <div class="card-body">
                                         <!-- Notification -->
                                         <div class="alert alert-success d-none" role="alert"></div>
@@ -36,35 +35,23 @@
                                         <form id="form_login">
                                             <div class="form-floating mb-3">
                                                 <!-- Email Field -->
-                                                <input class="form-control" 
-                                                        id="email" 
-                                                        type="email" 
-                                                        name="email"
-                                                        placeholder="Email Address" 
-                                                        required/>
+                                                <input class="form-control" id="email" type="email" name="email" placeholder="Email Address" required />
                                                 <label for="email">Email Address</label>
                                             </div>
                                             <div class="form-floating mb-3">
                                                 <!-- Password Field -->
-                                                <input class="form-control" 
-                                                        id="password" 
-                                                        type="password"
-                                                        name="password" 
-                                                        placeholder="Password"
-                                                        required />
+                                                <input class="form-control" id="password" type="password" name="password" placeholder="Password" required />
                                                 <label for="password">Password</label>
                                             </div>
-                                            
                                             <div class="d-grid mt-4 mb-0">
-                                                <button class="btn btn-primary btn-block d-flex align-items-center justify-content-center"  type="submit">
+                                                <button class="btn btn-primary btn-block d-flex align-items-center justify-content-center" type="submit">
                                                     Login
                                                 </button>
                                             </div>
-                                            
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small">Need an account? <a href="register.html"> Sign up!</a></div>
+                                        <div class="small">Need an account? <a href="register.html">Sign up!</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -72,15 +59,19 @@
                     </div>
                 </main>
             </div>
-            <div id="layoutAuthentication_footer">
-                <footer class="py-4 bg-light mt-auto">
+    
+            <!-- Footer -->
+            <footer class="py-4 bg-light mt-auto">
+                <div id="layoutAuthentication_footer">
                     <div class="container-fluid px-4">
                         <div class="text-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; GreenGauge 2025</div>
                         </div>
                     </div>
-                </footer>
-            </div>
+                </div>
+            </footer>
         </div>
     </body>
+    
+    
 </html>

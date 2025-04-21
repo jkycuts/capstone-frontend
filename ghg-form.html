@@ -87,21 +87,41 @@
                             </div>
 
                             <div class="sb-sidenav-menu-heading">Inventory</div>
-                            <a class="nav-link" href="ghg-emission-table.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
                                 GHG Emission
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="/scope1-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+                                        Scope 1
+                                    </a>
+    
+                                    <a class="nav-link" href="/scope2-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
+                                        Scope 2
+                                    </a>
+
+                                    <a class="nav-link" href="/scope3-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
+                                        Scope 3
+                                    </a>
+
+                                    <a class="nav-link" href="/summary-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
+                                        Summary
+                                    </a>
+
+                                </nav>
+                            </div>
                             <a class="nav-link" href="carbon-seq.html">
                               <div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div>
                               Carbon Sequestration
                           </a>
 
-                            <div class="sb-sidenav-menu-heading">Reports</div>
-                            <a class="nav-link" href="charts.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-file-chart-column"></i></div>
-                               Summary
-                            </a>
-
+                            
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -121,103 +141,21 @@
                     <div class="alert alert-danger d-none" role="alert"></div>
               
                     <form id="form_ghg_emission">
-                      <!-- General Info -->
-                      <h4 class="mb-3">General Information</h4>
-                      <div class="row">
-                        <div class="col-md-6 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: large;">
-                            Year
-                        </label>
-                          <input class="form-control mt-2" type="number" placeholder="Year" id="year" required>
-                        </div>
 
-                        <div class="col-md-6 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: large;">
-                            Quarter
-                        </label>
-                          <select class="form-select mt-2" id="quarter" name="quarter">
-                            <option selected disabled>Quarter</option>
-                            <option value="Q1">Q1</option>
-                            <option value="Q2">Q2</option>
-                            <option value="Q3">Q3</option>
-                            <option value="Q4">Q4</option>
-                          </select>
-                        </div>
-                      </div>
+                      <select id="scopeSelector" class="form-select" aria-label="Select Scope">
+                        <option selected disabled>Select Scope</option>
+                        <option value="scope1-form.html">Scope 1</option>
+                        <option value="scope2-form.html">Scope 2</option>
+                        <option value="scope3-form.html">Scope 3</option>
+                      </select>
+                      
 
-                      <div class="col-md-4 mb-3">
-                        <label for="form-label " style="font-weight:600; font-size:medium;">
-                          Date Recorded
-                      </label>
-                        <input class="form-control mt-2" type="date" placeholder="Date Recorded" id="date_recorded" name="date_recorded" required>
+
+                     
+                       </form> 
                       </div>
               
-                      <!-- Scope 1: Fuel -->
-                      <h4 class="mb-3">Fuel Consumption</h4>
-                      <div class="row">
-                        <div class="col-md-4 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: medium;">
-                            Fuel Source
-                        </label>
-                          <input class="form-control mt-2" type="text" placeholder="Fuel Source" id="fuel_source" required>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: medium;">
-                            Fuel Type
-                        </label>
-                          <input class="form-control mt-2" type="text" placeholder="Fuel Type" id="fuel_type" required>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: medium;">
-                            Liters Used
-                        </label>
-                          <input class="form-control mt-2" type="number" placeholder="Liters Used" id="fuel_liters_used" required>
-                        </div>
-                      </div>
-              
-                      <!-- Scope 2: Electricity -->
-                      <h4 class="mb-3">Purchased Electricity</h4>
-                      <div class="mb-3">
-                        <label for="form-label " style="font-weight:600; font-size: medium;">
-                          Electricity Used
-                      </label>
-                        <input class="form-control mt-2" type="number" placeholder="Electricity Used (kWh)" id="electricity_kwh" required>
-                      </div>
-              
-                      <!-- Scope 3: Travel -->
-                      <h4 class="mb-3">Business Travel</h4>
-                      <div class="row">
-                        <div class="col-md-4 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: medium;">
-                           Category
-                        </label>
-                          <select class="form-select mt-2" id="travel_category" name="travel_category" required>
-                            <option selected disabled>Category</option>
-                            <option value="short">Short</option>
-                            <option value="medium">Medium</option>
-                            <option value="long">Long</option>
-                            <option value="unknown">Unknown Distance</option>
-                        </select>
-                        
-                        </div>
-                        <div class="col-md-4 mb-3">
-                          <label for="form-label " style="font-weight:600; font-size: medium;">
-                            Total Disatance (Miles)
-                        </label>
-                          <input class="form-control mt-2" type="number" placeholder="Total Distance (Miles)" id="travel_distance_miles" name="travel_distance_miles" required>
-                        </div>
-
-                        
-
-                        
-                        
-                      </div>
-              
-                      <div class="text-center mt-4">
-                        <button type="submit" class="custom-button">Save</button>
-                      </div>
+                      
                     </form>
                   </div>
                 </div>

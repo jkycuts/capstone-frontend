@@ -1,162 +1,183 @@
 import { backendURL, successNotification, errorNotification } from '../utils/utils.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-    const form_ghg_emission = document.getElementById("form_ghg_emission");
-    if (!form_ghg_emission) {
-        console.warn("form_ghg_emission not found");
+    const token = localStorage.getItem('token');
+    if (!token) {
+        errorNotification("No authentication token found. Please log in.", 5);
         return;
     }
 
-    const submitBtn = form_ghg_emission.querySelector("button[type=submit]");
+    // Scope selector logic
+    const scopeSelector = document.getElementById("scopeSelector");
+    if (scopeSelector) {
+        scopeSelector.addEventListener("change", function () {
+            const selectedValue = this.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        });
+    }
 
-    form_ghg_emission.onsubmit = async function (e) {
-        e.preventDefault();
+    // Handle Scope 1: Fuel Consumption
+    const formFuel = document.getElementById("form_scope1_fuel");
+    if (formFuel) {
+        formFuel.onsubmit = async function (e) {
+            e.preventDefault();
+            const year = +document.getElementById("fuel_year").value;
+            const quarter = document.getElementById("fuel_quarter").value;
+            const fuel_source = document.getElementById("fuel_source").value;
+            const fuel_type = document.getElementById("fuel_type").value;
+            const fuel_liters_used = parseFloat(document.getElementById("fuel_liters_used").value);
+            const date_recorded = document.getElementById("fuel_date_recorded").value;
 
-        const year = document.getElementById("year").value;
-        const quarter = document.getElementById("quarter").value;
-        const fuel_source = document.getElementById("fuel_source").value;
-        const fuel_type = document.getElementById("fuel_type").value;
-        const fuel_liters_used = document.getElementById("fuel_liters_used").value;
-        const electricity_kwh = document.getElementById("electricity_kwh").value;
-        const travel_category = document.getElementById("travel_category").value;
-        const travel_distance_miles = document.getElementById("travel_distance_miles").value;
-        const date_recorded = document.getElementById("date_recorded").value;
-
-        // Basic required fields check
-        if (!year || !quarter || !fuel_source || !fuel_type || !fuel_liters_used ||
-            !electricity_kwh || !travel_category || !travel_distance_miles) {
-            errorNotification("Please fill in all required fields.", 5);
-            return;
-        }
-
-        // Parse and validate numeric values
-        const parsedFuelLiters = parseFloat(fuel_liters_used);
-        const parsedElectricityKwh = parseFloat(electricity_kwh);
-        const parsedTravelDistance = parseFloat(travel_distance_miles);
-
-        if (isNaN(parsedFuelLiters) || isNaN(parsedElectricityKwh) || isNaN(parsedTravelDistance)) {
-            errorNotification("Please ensure all numerical fields are valid.", 5);
-            return;
-        }
-
-        // Date validation
-        const parsedDateRecorded = new Date(date_recorded);
-        if (isNaN(parsedDateRecorded.getTime())) {
-            errorNotification("Invalid date format for the date recorded.", 5);
-            return;
-        }
-
-        try {
-            const token = localStorage.getItem('token');
-
-            if (!token) {
-                errorNotification("No authentication token found. Please log in.", 5);
+            if (!year || !quarter || !fuel_source || !fuel_type || isNaN(fuel_liters_used)) {
+                errorNotification("Fill in all required fields.", 5);
                 return;
             }
 
-            submitBtn.disabled = true;
-
-            // Define emission factors for each fuel type
-            const emissionFactors = {
-                'diesel': { 'co2': 2.712681, 'ch4': 0.000143, 'n2o': 0.000143 },
-                'biodiesel': { 'co2': 0.0, 'ch4': 0.000382, 'n2o': 0.000872 },
-                'ethanol': { 'co2': 0.0, 'ch4': 0.0001, 'n2o': 0.0001 },
-                'gasoline': { 'co2': 2.297040, 'ch4': 0.000671, 'n2o': 0.000210 }
+            const factors = {
+                diesel: { co2: 2.712681, ch4: 0.000143, n2o: 0.000143 },
+                biodiesel: { co2: 0.0, ch4: 0.000382, n2o: 0.000872 },
+                ethanol: { co2: 0.0, ch4: 0.0001, n2o: 0.0001 },
+                gasoline: { co2: 2.297040, ch4: 0.000671, n2o: 0.000210 },
             };
 
-            // Retrieve the emission factors for the selected fuel type
-            const fuelEmissionsFactor = emissionFactors[fuel_type];
-            if (!fuelEmissionsFactor) {
-                errorNotification("Invalid fuel type selected.", 5);
+            const ef = factors[fuel_type];
+            if (!ef) {
+                errorNotification("Invalid fuel type.", 5);
                 return;
             }
 
-            // Calculate emissions for fuel consumption (in CO2e)
-            const fuelEmissions = parsedFuelLiters * fuelEmissionsFactor.co2 +
-                                  parsedFuelLiters * fuelEmissionsFactor.ch4 +
-                                  parsedFuelLiters * fuelEmissionsFactor.n2o;
+            const fuelEmissions = fuel_liters_used * (ef.co2 + ef.ch4 + ef.n2o);
 
-            // Calculate electricity emissions (in CO2e)
-            const electricityMWh = parsedElectricityKwh / 1000; // Convert kWh to MWh
-            const electricityEmissionFactor = 0.496; // Emission factor for electricity in CO2e per MWh
-            const electricityEmissions = electricityMWh * electricityEmissionFactor;
+            try {
+                const res = await fetch(`${backendURL}/api/ghg-emission/fuel`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        year,
+                        quarter,
+                        fuel_source,
+                        fuel_type,
+                        fuel_liters_used,
+                        total_emissions: fuelEmissions,
+                        date_recorded
+                    })
+                });
 
-            // Calculate business travel emissions (in CO2e)
-            const travelEmissionFactors = {
-                'co2': 0.277, // CO2 per mile
-                'ch4': 0.0000104, // CH4 per mile
-                'n2o': 0.0000085 // N2O per mile
-            };
-            const activityData = parsedTravelDistance; // Total distance traveled in miles
-            const travelCo2 = activityData * travelEmissionFactors.co2;
-            const travelCh4 = activityData * travelEmissionFactors.ch4;
-            const travelN2o = activityData * travelEmissionFactors.n2o;
-            const totalTravelEmissionsKg = travelCo2 + travelCh4 + travelN2o;
-            const totalTravelEmissions = totalTravelEmissionsKg / 1000; // Convert kg to metric tons
+                const data = await res.json();
+                if (!res.ok) throw data;
 
-            // Calculate total emissions for the period
-            const totalEmissions = fuelEmissions + electricityEmissions + totalTravelEmissions;
+                successNotification(`Fuel emission recorded. <b>${fuelEmissions.toFixed(3)}</b> TCO₂`, 5);
+                formFuel.reset();
+                setTimeout(() => window.location.href = "/ghg-emission-table.html", 3000);
+            } catch (err) {
+                console.error("Fuel Scope Error:", err);
+                errorNotification(err.message || "Failed to submit fuel emission", 5);
+            }
+        };
+    }
 
-            const response = await fetch(`${backendURL}/api/ghg-emission`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    year: parseInt(year),
-                    quarter,
-                    fuel_source,
-                    fuel_type,
-                    fuel_liters_used: parsedFuelLiters,
-                    electricity_kwh: parsedElectricityKwh,
-                    travel_category,
-                    travel_distance_miles: parsedTravelDistance,
-                    total_emissions: totalEmissions,
-                    date_recorded,
-                })
-            });
+    // Handle Scope 2: Electricity
+    const formElectricity = document.getElementById("form_scope2_electricity");
+    if (formElectricity) {
+        formElectricity.onsubmit = async function (e) {
+            e.preventDefault();
 
-            if (!response.ok) {
-                const errorJson = await response.json();
-                console.error("Validation Error:", errorJson);
+            const year = +document.getElementById("elec_year").value;
+            const quarter = document.getElementById("elec_quarter").value;
+            const electricity_kwh = parseFloat(document.getElementById("electricity_kwh").value);
+            const date_recorded = document.getElementById("elec_date_recorded").value;
 
-                if (errorJson.errors) {
-                    const details = Object.values(errorJson.errors).flat().join('<br>');
-                    errorNotification(details, 5);
-                } else {
-                    errorNotification(errorJson.message || "Validation failed", 5);
-                }
-
+            if (!year || !quarter || isNaN(electricity_kwh)) {
+                errorNotification("Fill in all required fields.", 5);
                 return;
             }
 
-            const data = await response.json();
-            console.log("Success:", data);
+            const mwh = electricity_kwh / 1000;
+            const factor = 0.496;
+            const electricityEmissions = mwh * factor;
 
-            const emissions = data.emissions;
-            successNotification(
-                `GHG emission recorded successfully.<br>
-                <b>Total Emission:</b> ${(emissions.total_tco2 ?? 0).toFixed(3)} TCO₂<br>
-                <b>Fuel:</b> ${(emissions.fuel_tco2 ?? 0).toFixed(3)}<br>
-                <b>Electricity:</b> ${(emissions.electricity_tco2 ?? 0).toFixed(3)}<br>
-                <b>Travel:</b> ${(emissions.business_travel_tco2 ?? 0).toFixed(3)}`,
-                5
-            );
-            
+            try {
+                const res = await fetch(`${backendURL}/api/ghg-emission/electricity`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        year,
+                        quarter,
+                        electricity_kwh,
+                        total_emissions: electricityEmissions,
+                        date_recorded
+                    })
+                });
 
-            form_ghg_emission.reset();
+                const data = await res.json();
+                if (!res.ok) throw data;
 
-            setTimeout(() => {
-                window.location.href = "/ghg-emission-table.html";
-            }, 3000);
+                successNotification(`Electricity emission recorded. <b>${electricityEmissions.toFixed(3)}</b> TCO₂`, 5);
+                formElectricity.reset();
+                setTimeout(() => window.location.href = "/ghg-emission-table.html", 3000);
+            } catch (err) {
+                console.error("Electricity Scope Error:", err);
+                errorNotification(err.message || "Failed to submit electricity emission", 5);
+            }
+        };
+    }
 
-        } catch (error) {
-            console.error("Client Error:", error);
-            errorNotification("Unexpected client error occurred. Please check console for details.", 5);
-        } finally {
-            submitBtn.disabled = false;
-        }
-    };
+    // Handle Scope 3: Business Travel
+    const formTravel = document.getElementById("form_scope3_travel");
+    if (formTravel) {
+        formTravel.onsubmit = async function (e) {
+            e.preventDefault();
+
+            const year = +document.getElementById("travel_year").value;
+            const quarter = document.getElementById("travel_quarter").value;
+            const travel_category = document.getElementById("travel_category").value;
+            const distance = parseFloat(document.getElementById("travel_distance_miles").value);
+            const date_recorded = document.getElementById("travel_date_recorded").value;
+
+            if (!year || !quarter || !travel_category || isNaN(distance)) {
+                errorNotification("Fill in all required fields.", 5);
+                return;
+            }
+
+            const factors = { co2: 0.277, ch4: 0.0000104, n2o: 0.0000085 };
+            const kg = distance * (factors.co2 + factors.ch4 + factors.n2o);
+            const travelEmissions = kg / 1000;
+
+            try {
+                const res = await fetch(`${backendURL}/api/ghg-emission/travel`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        year,
+                        quarter,
+                        travel_category,
+                        travel_distance_miles: distance,
+                        total_emissions: travelEmissions,
+                        date_recorded
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw data;
+
+                successNotification(`Travel emission recorded. <b>${travelEmissions.toFixed(3)}</b> TCO₂`, 5);
+                formTravel.reset();
+                setTimeout(() => window.location.href = "/ghg-emission-table.html", 3000);
+            } catch (err) {
+                console.error("Travel Scope Error:", err);
+                errorNotification(err.message || "Failed to submit travel emission", 5);
+            }
+        };
+    }
 });

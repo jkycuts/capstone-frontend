@@ -1,54 +1,83 @@
 import { backendURL, errorNotification } from '../utils/utils.js';
 
-async function loadGHGInventory() {
-    const token = localStorage.getItem('token');
-    const tableBody = document.getElementById('ghg_table_body');
+document.addEventListener('DOMContentLoaded', () => {
+    const scopeSelector = document.getElementById("inventory-select");
+    const scopeContainer = document.getElementById("scope-table-container");
 
-    if (!token) {
-        errorNotification("No token found. Please log in.", 5);
-        return;
-    }
+    if (scopeSelector) {
+        scopeSelector.addEventListener("change", async function () {
+            const selectedValue = this.value;
 
-    try {
-        const response = await fetch(`${backendURL}/api/ghg-emission`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/json"
+            if (!selectedValue) return;
+
+            try {
+                // Fetch the table HTML file first
+                const fetchPath = `./${selectedValue}`;
+                console.log('Fetching HTML file:', fetchPath);
+
+                const response = await fetch(fetchPath);
+
+                if (!response.ok) {
+                    throw new Error('Failed to load table content');
+                }
+
+                const html = await response.text();
+                console.log('HTML Loaded:', html); // Log the full response for debugging
+
+                // Use DOMParser to extract the content inside the <div class="table-responsive">
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const tableContent = doc.querySelector('.table-responsive');
+
+                // Ensure the table content is found
+                if (tableContent) {
+                    console.log('Table Content:', tableContent);
+                    scopeContainer.innerHTML = '';  // Clear any existing content
+                    scopeContainer.appendChild(tableContent);  // Append the table content
+                    
+                    // Now fetch the actual emissions data from the backend
+                    const emissionsResponse = await fetch(backendURL + '/api/ghg-emission/fuel');  // Fetch data from the API endpoint
+                    const emissionsData = await emissionsResponse.json();
+
+                    // Call function to populate the table with the data
+                    populateScope1Table(emissionsData);
+                } else {
+                    throw new Error('Table content not found in the loaded HTML.');
+                }
+
+            } catch (err) {
+                console.error('Error loading the table:', err);
+                scopeContainer.innerHTML = '<div class="alert alert-danger">Failed to load the selected table. Please try again.</div>';
             }
         });
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch GHG records.");
-        }
-
-        const ghgData = await response.json();
-        tableBody.innerHTML = ''; // Clear table
-
-        ghgData.forEach(record => {
-            const row = `
-                <tr>
-                    <td>${record.year}</td>
-                    <td>${record.quarter}</td>
-                    <td>${record.fuel_source}</td>
-                    <td>${record.fuel_type}</td>
-                    <td>${record.fuel_liters_used}</td>
-                    <td>${record.electricity_kwh}</td>
-                    <td>${record.travel_category}</td>
-                    <td>${record.travel_distance_miles}</td>
-                    <td>${parseFloat(record.fuel_tco2 || 0).toFixed(4)}</td>
-                    <td>${parseFloat(record.electricity_tco2 || 0).toFixed(4)}</td>
-                    <td>${parseFloat(record.travel_tco2 || 0).toFixed(4)}</td>
-                    <td>${parseFloat(record.total_tco2 || 0).toFixed(4)}</td>
-                </tr>
-            `;
-            tableBody.insertAdjacentHTML('beforeend', row);
-        });
-
-    } catch (err) {
-        console.error("Error loading GHG inventory:", err);
-        errorNotification("Unable to load GHG emissions data.", 5);
     }
-}
+});
 
-// Load on page load or tab switch
-document.addEventListener('DOMContentLoaded', loadGHGInventory);
+// Function to populate the Scope 1 table with data from the API
+function populateScope1Table(emissionsData) {
+    const tableBody = document.getElementById('scope1_table_body');
+
+    // Clear any existing rows
+    tableBody.innerHTML = '';
+
+    // Loop through the data and create table rows dynamically
+    emissionsData.forEach(emission => {
+        const row = document.createElement('tr');
+
+        // Create and append table cells
+        const paramCell = document.createElement('td');
+        paramCell.textContent = emission.parameter || 'N/A'; // Assuming there's a 'parameter' field
+        row.appendChild(paramCell);
+
+        const yearCell = document.createElement('td');
+        yearCell.textContent = emission.year || 'N/A'; // Assuming there's a 'year' field
+        row.appendChild(yearCell);
+
+        const emissionsCell = document.createElement('td');
+        emissionsCell.textContent = emission.total_emissions_tco2 || 'N/A'; // Assuming there's a 'total_emissions_tco2' field
+        row.appendChild(emissionsCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
+    });
+}

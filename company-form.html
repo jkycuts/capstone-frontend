@@ -83,20 +83,41 @@
                             </div>
 
                             <div class="sb-sidenav-menu-heading">Inventory</div>
-                            <a class="nav-link" href="ghg-emission-table.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-industry"></i></div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
                                 GHG Emission
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="/scope1-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+                                        Scope 1
+                                    </a>
+    
+                                    <a class="nav-link" href="/scope2-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
+                                        Scope 2
+                                    </a>
+
+                                    <a class="nav-link" href="/scope3-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
+                                        Scope 3
+                                    </a>
+
+                                    <a class="nav-link" href="/summary-table.html">
+                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
+                                        Summary
+                                    </a>
+
+                                </nav>
+                            </div>
                             <a class="nav-link" href="carbon-seq.html">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div>
                                 Carbon Sequestration
                             </a>
 
-                            <div class="sb-sidenav-menu-heading">Reports</div>
-                            <a class="nav-link" href="charts.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-file-chart-column"></i></div>
-                                Compliance
-                            </a>
+                            
                         </div>
 
                        
