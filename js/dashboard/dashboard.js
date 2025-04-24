@@ -41,6 +41,7 @@ getLoggedUser();
 // Fetch Dashboard Summary Data
 async function getDashboardData() {
     const token = localStorage.getItem("token");
+    const companyId = localStorage.getItem("company_id"); // Fetch company_id
 
     if (!token) {
         errorNotification("No authentication token found!", 10);
@@ -67,24 +68,23 @@ async function getDashboardData() {
             console.log("Percentage Contribution:", data.percentage_contribution);
 
             
+            
             const totalEmissionElement = document.getElementById("totalEmission");
             const totalSequestrationElement = document.getElementById("totalSequestration");
             const carbonVarianceElement = document.getElementById("carbonVariance");
             const percentageGHGElement = document.getElementById("percentageGHG");
+
+            
 
             if (totalEmissionElement && totalSequestrationElement && carbonVarianceElement && percentageGHGElement) {
                 totalEmissionElement.textContent = `${data.totalEmission} TCO₂`;
                 totalSequestrationElement.textContent = `${data.total_sequestration} TCO₂`;
                 carbonVarianceElement.textContent = `${data.carbon_variance} TCO₂`;
                 percentageGHGElement.textContent = `${data.percentage_contribution}%`;
+                
 
-                successNotification('Dashboard data loaded successfully!', 5);
-            } else {
-                errorNotification("Dashboard elements not found in HTML.", 10);
             }
-        } else {
-            errorNotification(data.message || "Failed to load dashboard data.", 10);
-        }
+        } 
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
         errorNotification("Error fetching dashboard data.", 10);
@@ -162,7 +162,11 @@ function initializeTreeMap() {
     }).addTo(map);
 
     loadTreeMapMarkers(map);
+
+   
 }
+
+
 
 // On Dashboard Page Load
 if (document.body.dataset.page === "dashboard") {

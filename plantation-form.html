@@ -1,140 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Plantation Form - GreenGauge</title>
-      
-        <link href="css/styles.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Plantation Form - GreenGauge</title>
 
-        <script type="module" src="js/dashboard/dashboard.js"></script>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script type="module" src="js/dashboard/dashboard.js"></script>
+    <script src="js/utils/script.js"></script>
+    <script type="module" src="js/form/plantation-form.js"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Navbar -->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <ul class="navbar-nav ms-auto me-3 me-lg-4 pe-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user fa-fw"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#" id="btn_logout">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 
-        <script src="js/utils/script.js"></script>
-        <script type="module" src="js/form/plantation-form.js"></script>
+    <div id="layoutSidenav">
+        <!-- Sidebar -->
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
 
-    </head>
-    <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-           
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ml-auto me-3 me-lg-4 pe-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        
-                        <li><a class="dropdown-item" href="#" id = "btn_logout">
-                            Logout
-                        </a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Form</div>
-                            <a class="nav-link collapsed" href="/company-form.html" >
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard"></i></div>
-                                Company
-                                
-                            </a>
-                            <a class="nav-link collapsed" href="/ghg-form.html" >
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-cloud"></i></div>
-                                Ghg Emission
-                                
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
-                                Tree
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="/plantation-form.html">
-                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-mountain-sun"></i></div>
-                                        Plantation
-                                    </a>
-    
-                                    <a class="nav-link" href="/tree-growth.html">
-                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
-                                        Tree Data
-                                    </a>
-                                </nav>
-                            </div>
+                        <div class="sb-sidenav-menu-heading">Form</div>
+                        <a class="nav-link" href="/company-form.html">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard"></i></div>
+                            Company
+                        </a>
+                        <a class="nav-link" href="/ghg-form.html">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-cloud"></i></div>
+                            Ghg Emission
+                        </a>
 
-                            <div class="sb-sidenav-menu-heading">Inventory</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
-                                GHG Emission
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="/scope1-table.html">
-                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-mountain-sun"></i></div>
-                                        Scope 1
-                                    </a>
-    
-                                    <a class="nav-link" href="/scope2-table.html">
-                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
-                                        Scope 2
-                                    </a>
-
-                                    <a class="nav-link" href="/scope3-table.html">
-                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
-                                        Scope 3
-                                    </a>
-
-                                    <a class="nav-link" href="/summary-table.html">
-                                        <div class="sb-nav-link-icon"><i class="fa-solid fa-spa"></i></div>
-                                        Summary
-                                    </a>
-
-                                </nav>
-                            </div>
-                            <a class="nav-link" href="carbon-seq.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div>
-                                Carbon Sequestration
-                            </a>
-
-                            
-
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTree" aria-expanded="false" aria-controls="collapseTree">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
+                            Tree
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseTree" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/plantation-form.html"><i class="fa-solid fa-mountain-sun me-2"></i>Plantation</a>
+                                <a class="nav-link" href="/tree-growth.html"><i class="fa-solid fa-spa me-2"></i>Tree Data</a>
+                            </nav>
                         </div>
+
+                        <div class="sb-sidenav-menu-heading">Inventory</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGHG" aria-expanded="false" aria-controls="collapseGHG">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
+                            GHG Emission
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseGHG" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/scope1-table.html"><i class="fa-solid fa-mountain-sun me-2"></i>Scope 1</a>
+                                <a class="nav-link" href="/scope2-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 2</a>
+                                <a class="nav-link" href="/scope3-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 3</a>
+                                <a class="nav-link" href="/summary-table.html"><i class="fa-solid fa-spa me-2"></i>Summary</a>
+                            </nav>
+                        </div>
+
+                        <a class="nav-link" href="carbon-seq.html">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div>
+                            Carbon Sequestration
+                        </a>
                     </div>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                            <span id="user_logged"></span>
-                    </div>
-                </nav>
-            </div>
-            <div id="layoutSidenav_content">
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    <span id="user_logged"></span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div id="layoutSidenav_content">
+            <main>
                 <div class="container mt-5" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; max-width: fit-content; margin: 0 auto;">
-                    
-                        <h2 class="text-center mb-4">Plantation Form</h2>
-                
-                        <!-- Notifications -->
-                        <div class="alert alert-success d-none" role="alert" id="successAlert"></div>
-                        <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
-                
-                        <form id="form_plantation" enctype="multipart/form-data" method="POST">
+                    <h2 class="text-center mb-4">Plantation Form</h2>
+
+                    <!-- Notifications -->
+                    <div class="alert alert-success d-none" role="alert" id="successAlert"></div>
+                    <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
+
+                    <form id="form_plantation" enctype="multipart/form-data" method="POST">
 
                             <label for="form-label " style="font-weight:600; font-size: large;">
                                 Area Planted (Hectares)
@@ -151,29 +118,28 @@
                             </label>
                             <input class="form-control mb-4 mt-2" type="text" placeholder="Age of Plantation" aria-label="plantation_age" id = "plantation_age" name="plantation_age" required>
 
-                            <div class="col-md-4 mb-3">
+                            
                                 <label for="form-label " style="font-weight:600; font-size:medium;">
                                   Date Recorded
                               </label>
-                                <input class="form-control mt-2" type="date" placeholder="Date Recorded" id="date_recorded" name="date_recorded" required>
-                              </div>
+                                <input class="form-control mt-2 mb-4" type="date" placeholder="Date Recorded" id="date_recorded" name="date_recorded" required>
+                             
                 
                             <button type="submit" class="custom-button">Save</button>
                         </form>
+                </div>
+            </main>
+
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; GreenGauge 2025</div>
                     </div>
                 </div>
-                
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; GreenGauge 2025</div>
-                            
-                        </div>
-                    </div>
-                </footer>
-            </div>
+            </footer>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    </div>
 
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
 </html>
