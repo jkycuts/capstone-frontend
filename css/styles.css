@@ -10743,7 +10743,7 @@ body {
 }
 
 .custom-button {
-  background-color: #2b6cb0;
+  background-color: forestgreen;
   color: #fff;
   font-size: 16px;
   padding: 12px;
@@ -10764,7 +10764,7 @@ select {
 }
 
 button:hover {
-  background-color: #2c5282;
+  background-color: #2E8B57;
 }
 
 @media (max-width: 600px) {

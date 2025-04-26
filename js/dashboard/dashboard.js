@@ -38,10 +38,57 @@ async function getLoggedUser() {
 }
 getLoggedUser();
 
+
+// Render GHG Chart
+function renderGHGChart(totalEmission, totalSequestration, carbonVariance, percentageGHG) {
+    const ctx = document.getElementById("ghgChart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: [
+                "GHG Emission (TCO₂)",
+                "Carbon Sequestration (TCO₂)",
+                "Neutrality Variance (TCO₂)",
+                "National GHG Contribution (%)"
+            ],
+            datasets: [{
+                label: "GHG Metrics",
+                data: [totalEmission, totalSequestration, carbonVariance, percentageGHG],
+                backgroundColor: [
+                    "rgba(220, 53, 69, 0.6)",
+                    "rgba(25, 135, 84, 0.6)",
+                    "rgba(255, 193, 7, 0.6)",
+                    "rgba(13, 110, 253, 0.6)"
+                ],
+                borderColor: [
+                    "rgba(220, 53, 69, 1)",
+                    "rgba(25, 135, 84, 1)",
+                    "rgba(255, 193, 7, 1)",
+                    "rgba(13, 110, 253, 1)"
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
 // Fetch Dashboard Summary Data
 async function getDashboardData() {
     const token = localStorage.getItem("token");
-    const companyId = localStorage.getItem("company_id"); // Fetch company_id
 
     if (!token) {
         errorNotification("No authentication token found!", 10);
@@ -57,39 +104,39 @@ async function getDashboardData() {
         });
 
         const data = await response.json();
-        console.log("API response:", data); // Log the full response for debugging
-
-       
+        console.log("API response:", data);
 
         if (response.ok) {
-            console.log("Emission:", data.totalEmission);
-            console.log("Sequestration:", data.total_sequestration);
-            console.log("Variance:", data.carbon_variance);
-            console.log("Percentage Contribution:", data.percentage_contribution);
+            const {
+                totalEmission,
+                total_sequestration,
+                carbon_variance,
+                percentage_contribution
+            } = data;
 
-            
-            
-            const totalEmissionElement = document.getElementById("totalEmission");
-            const totalSequestrationElement = document.getElementById("totalSequestration");
-            const carbonVarianceElement = document.getElementById("carbonVariance");
-            const percentageGHGElement = document.getElementById("percentageGHG");
+            // Update DOM elements
+            document.getElementById("totalEmission").textContent = `${totalEmission} TCO₂`;
+            document.getElementById("totalSequestration").textContent = `${total_sequestration} TCO₂`;
+            document.getElementById("carbonVariance").textContent = `${carbon_variance} TCO₂`;
+            document.getElementById("percentageGHG").textContent = `${percentage_contribution}%`;
 
-            
-
-            if (totalEmissionElement && totalSequestrationElement && carbonVarianceElement && percentageGHGElement) {
-                totalEmissionElement.textContent = `${data.totalEmission} TCO₂`;
-                totalSequestrationElement.textContent = `${data.total_sequestration} TCO₂`;
-                carbonVarianceElement.textContent = `${data.carbon_variance} TCO₂`;
-                percentageGHGElement.textContent = `${data.percentage_contribution}%`;
-                
-
-            }
-        } 
+            // Render GHG Chart
+            renderGHGChart(
+                totalEmission,
+                total_sequestration,
+                carbon_variance,
+                percentage_contribution
+            );
+        } else {
+            errorNotification(data.message || "Failed to load dashboard summary.", 10);
+        }
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
         errorNotification("Error fetching dashboard data.", 10);
     }
 }
+
+
 
 // Load Tree Locations into the Map
 let treeMarkers = []; // declared globally

@@ -57,7 +57,9 @@ function summarize(records) {
         2021: 0,
         2022: 0,
         2023: 0,
-        2024: 0
+        2024: 0,
+        2025: 0
+        
     };
 
     records.forEach(record => {
@@ -74,7 +76,7 @@ function summarize(records) {
 
 function renderSummary(data) {
     const tbody = document.getElementById('summary_table_body');
-    const totalsByYear = { 2021: 0, 2022: 0, 2023: 0, 2024: 0 };
+    const totalsByYear = { 2021: 0, 2022: 0, 2023: 0, 2024: 0, 2025: 0 };
     let overallTotal = 0;
 
     tbody.innerHTML = '';
@@ -87,6 +89,7 @@ function renderSummary(data) {
             <td>${emissions[2022].toFixed(3)}</td>
             <td>${emissions[2023].toFixed(3)}</td>
             <td>${emissions[2024].toFixed(3)}</td>
+            <td>${emissions[2025].toFixed(3)}</td>
             <td>${emissions.total.toFixed(3)}</td>
         `;
         tbody.appendChild(row);
@@ -104,9 +107,10 @@ function renderSummary(data) {
     document.getElementById('year_total_2022').textContent = totalsByYear[2022].toFixed(3);
     document.getElementById('year_total_2023').textContent = totalsByYear[2023].toFixed(3);
     document.getElementById('year_total_2024').textContent = totalsByYear[2024].toFixed(3);
+    document.getElementById('year_total_2025').textContent = totalsByYear[2025].toFixed(3);
     document.getElementById('overall_total').textContent = overallTotal.toFixed(3);
 
-    // ✅ Update dashboard GHG emission display
+    // Update dashboard GHG emission display
     const totalDisplay = document.getElementById('total_ghg_emission');
     if (totalDisplay) {
         totalDisplay.textContent = overallTotal.toLocaleString(undefined, {

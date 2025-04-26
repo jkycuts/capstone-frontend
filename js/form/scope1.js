@@ -1,5 +1,6 @@
 import { backendURL, successNotification, errorNotification } from '../utils/utils.js';
 
+
 document.getElementById('form_scope1_fuel').addEventListener('submit', async function (e) {
     e.preventDefault();
 

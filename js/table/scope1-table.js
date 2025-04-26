@@ -1,5 +1,10 @@
 import { backendURL, errorNotification } from '../utils/utils.js';
 
+function capitalizeFirstLetter(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 async function loadScope1Emissions() {
     const token = localStorage.getItem('token');
     const tableBody = document.getElementById('scope1_table_body');
@@ -43,7 +48,7 @@ async function loadScope1Emissions() {
         if (scope1Data && Array.isArray(scope1Data) && scope1Data.length > 0) {
             scope1Data.forEach(record => {
                 // Handle undefined properties to avoid breaking the table
-                const parameter = record.parameter || 'N/A';
+                const parameter = capitalizeFirstLetter(record.parameter) || 'N/A';
                 const year = record.year || 'N/A';
                 const emission_tco2e = record.emission_tco2e || '0.00';
 
