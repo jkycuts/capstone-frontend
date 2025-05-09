@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Super Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <script type="module" src="js/admin.dasboard/admin-login.js"></script>
+</head>
+<body class="bg-gray-100">
+
+  <div class="max-w-7xl mx-auto p-6">
+    <header class="mb-6 flex justify-between items-center">
+      <h1 class="text-4xl font-semibold text-gray-900">Super Admin Dashboard</h1>
+      <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+    </header>
+
+    <!-- Admin-only section -->
+    <div class="admin-section hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
+        <p class="text-gray-700">View and manage users who have access to the system.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Go to User Management</button>
+      </div>
+
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">View Reports</h2>
+        <p class="text-gray-700">Generate and view system reports based on data.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Generate Reports</button>
+      </div>
+
+      <div class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-4">System Settings</h2>
+        <p class="text-gray-700">Modify system-wide settings and configurations.</p>
+        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Manage Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check role from localStorage
+    const role = localStorage.getItem("role");
+    const adminSection = document.querySelector(".admin-section");
+
+    // Only allow access to super_admins
+    if (role === "super_admin") {
+      adminSection.classList.remove("hidden");
+    } else {
+      // Redirect to unauthorized page or user dashboard
+      window.location.href = "/unauthorized.html"; // or "/user-dashboard.html"
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("user");
+      window.location.href = "/login.html";
+    }
+  </script>
+
+</body>
+</html>

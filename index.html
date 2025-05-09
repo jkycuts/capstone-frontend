@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-
+       
 
         <script type="module" src="js/dashboard/dashboard.js"></script>
 
@@ -40,6 +40,8 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark ">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
+
+            
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
            
@@ -66,6 +68,8 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
+
+                           
 
                             <!-- Add this inside the <body> tag -->
                         <div id="loading_indicator" class="d-none">
@@ -139,6 +143,7 @@
                 <main>
                     <div class="container-fluid px-4 mb-4">
                         <h1 class="mt-2 text-2xl font-bold text-gray-800">Dashboard</h1>
+                        <a href="admin.html">Admin</a>
                     
                         <!-- Notifications -->
                         <div class="alert alert-success d-none mt-3" role="alert"></div>
@@ -152,10 +157,13 @@
 
                                 <div class="col-12 my-4">
                                     <div class="p-4 bg-white shadow rounded-xl">
-                                        <h5 class="text-muted mb-3">Overview</h5>
-                                        <canvas id="ghgChart" height="50"></canvas>
+                                        
+                                        <div style="position: relative; width: 100%; height: auto;">
+                                            <canvas id="ghgChart"></canvas>
+                                        </div>
                                     </div>
                                 </div>
+                                
                                 
 
                                 <div class="col-12 col-md-6 col-lg-3 my-2">
@@ -227,5 +235,17 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <!-- <script type="module" src="/js/summary-table.js"></script> -->
+
+        <script>
+                    window.addEventListener('DOMContentLoaded', (event) => {
+            const role = localStorage.getItem("role");
+
+            // Optionally show admin-specific features in the regular user page
+            if (role === "super_admin") {
+                // Optionally add admin features like a sidebar or links
+                document.getElementById("admin-feature").classList.remove("hidden");
+            }
+        });
+        </script>
     </body>  
 </html>

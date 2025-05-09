@@ -56,10 +56,10 @@ function renderGHGChart(totalEmission, totalSequestration, carbonVariance, perce
                 label: "GHG Metrics",
                 data: [totalEmission, totalSequestration, carbonVariance, percentageGHG],
                 backgroundColor: [
-                    "rgba(220, 53, 69, 0.6)",
-                    "rgba(25, 135, 84, 0.6)",
-                    "rgba(255, 193, 7, 0.6)",
-                    "rgba(13, 110, 253, 0.6)"
+                    "rgba(220, 53, 69, 0.6)",    // red
+                    "rgba(25, 135, 84, 0.6)",     // green
+                    "rgba(255, 193, 7, 0.6)",     // yellow
+                    "rgba(13, 110, 253, 0.6)"     // blue
                 ],
                 borderColor: [
                     "rgba(220, 53, 69, 1)",
@@ -72,6 +72,7 @@ function renderGHGChart(totalEmission, totalSequestration, carbonVariance, perce
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true
@@ -80,11 +81,17 @@ function renderGHGChart(totalEmission, totalSequestration, carbonVariance, perce
             plugins: {
                 legend: {
                     display: false
+                },
+                title: {
+                    display: true,
+                    text: "Metrics Summary"
                 }
             }
         }
     });
 }
+
+
 
 // Fetch Dashboard Summary Data
 async function getDashboardData() {
@@ -135,6 +142,7 @@ async function getDashboardData() {
         errorNotification("Error fetching dashboard data.", 10);
     }
 }
+
 
 
 

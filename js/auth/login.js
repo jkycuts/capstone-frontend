@@ -1,51 +1,64 @@
 import { backendURL, successNotification, errorNotification } from "../utils/utils.js";
 
-/* Form Login */
+// Check if the user is already logged in and redirect to their dashboard
+if (localStorage.getItem("token")) {
+    const role = localStorage.getItem("role");
+    if (role === "super_admin") {
+        window.location.href = "/admin.html";  // Redirect to Admin Dashboard
+    } else {
+        window.location.href = "/index.html";  // Redirect to User Dashboard
+    }
+}
+
 const form_login = document.getElementById("form_login");
 
-form_login.onsubmit = async (e) => {
-    e.preventDefault();
+if (form_login) {
+    form_login.onsubmit = async (e) => {
+        e.preventDefault();
 
-    // Disable Button
-    document.querySelector("#form_login button").disabled = true;
-    document.querySelector("#form_login button").innerHTML = 
-    `<div class="spinner-border me-2" role="status"></div> 
-    <span>Loading...</span>` ;
+        const loginButton = form_login.querySelector("button");
+        loginButton.disabled = true;
+        loginButton.innerHTML = `
+            <div class="spinner-border me-2" role="status"></div> 
+            <span>Loading...</span>`;
 
-    // Get values of form (input, textarea, select) set it as form data
-    const formData = new FormData(form_login);
+        const formData = new FormData(form_login);
 
-    // Fetch User API user register endpoint
-    const response = await fetch(backendURL + "/api/login", {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-        },
-        body: formData,
-    });
+        try {
+            const response = await fetch(`${backendURL}/api/user/login`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                },
+                body: formData,
+            });
 
-    // Get response if 200-299 status code
-    if (response.ok) {
-        const json = await response.json();
-        console.log(json);
+            const data = await response.json();
+            console.log("Login Response Data:", data); // Add this line
 
-        localStorage.setItem("token", json.token)
+            if (response.ok) {
+                // Store user info in localStorage
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("user", JSON.stringify(data.user));
 
-        form_login.reset();
 
-        successNotification("Successfully Login Account!");
+                // Redirect based on role
+                if (data.role === "super_admin") {
+                    window.location.href = "/admin.html";  // Redirect to Admin Dashboard
+                } else {
+                    window.location.href = "/index.html";  // Redirect to User Dashboard
+                }
+            } else {
+                errorNotification(data.message || "Login failed", 5);
+            }
+        } catch (error) {
+            console.error("Login Error:", error);
+            errorNotification("An error occurred while logging in.", 5);
+        }
 
-        /* Redirect Page */
-        window.location.href = "/index.html";
-
-    // Get response if 422 status code
-    } else if (response.status == 422) {
-        const json = await response.json();
-
-        errorNotification(json.message, 5);
-    }
-
-    // Enable Button
-    document.querySelector("#form_login button").disabled = false;
-    document.querySelector("#form_login button").innerHTML = `Login`;
-};
+        // Re-enable the login button
+        loginButton.disabled = false;
+        loginButton.innerHTML = "Login";
+    };
+}
