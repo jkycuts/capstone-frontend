@@ -119,15 +119,26 @@
 
                     <form id="form_scope1_fuel">
                       <div class="row">
-                        
+                        <!-- Year -->
                         <div class="col-md-6 mb-3">
                           <label for="year" class="form-label">Year</label>
                           <input class="form-control" type="number" id="year" placeholder="Year" required>
                         </div>
                     
+                        <!-- Mode Selection -->
                         <div class="col-md-6 mb-3">
-                          <label for="quarter" class="form-label">Quarter</label>
-                          <select class="form-control" id="quarter" required>
+                          <label for="mode" class="form-label">Data Mode</label>
+                          <select class="form-control" id="mode" required>
+                            <option value="">Select Mode</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                          </select>
+                        </div>
+                    
+                        <!-- Quarter (shown only when mode is 'quarterly') -->
+                        <div class="col-md-6 mb-3" id="quarter-container" style="display: none;">
+                          <label for="quarter" class="form-label" id="quarterLabel">Quarter</label>
+                          <select class="form-control" id="quarter">
                             <option value="">Select Quarter</option>
                             <option value="Q1">Q1</option>
                             <option value="Q2">Q2</option>
@@ -136,29 +147,80 @@
                           </select>
                         </div>
                     
-                        <!-- This is the missing parameter field -->
-                        <div class="col-md-6 mb-3">
-                          <label for="parameter" class="form-label" style="font-weight:600; font-size: large;">
-                            Parameter
-                          </label>
-                          <input class="form-control" type="text" id="parameter" placeholder="Enter parameter" required>
+                        <!-- Month (shown only when mode is 'monthly') -->
+                        <div class="col-md-6 mb-3" id="month-container" style="display: none;">
+                          <label for="month" class="form-label" id="monthLabel">Month</label>
+                          <select class="form-control" id="month">
+                            <option value="">Select Month</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                          </select>
                         </div>
                     
+                        
+                       <!-- Parameter (Dropdown) -->
+                      <div class="col-md-6 mb-3">
+                        <label for="parameter" class="form-label" style="font-weight:600; font-size: large;">Parameter</label>
+                        <select class="form-control" id="parameter" required>
+                          <option value="">Select Parameter</option>
+                          <option value="transportation">Transportation</option>
+                          <option value="production">Production</option>
+                          <option value="electric generation">Electric Generation</option>
+                        </select>
+                      </div>
+
+                    
+                        <!-- Fuel Type -->
                         <div class="col-md-6 mb-3">
                           <label for="fuel_type" class="form-label">Fuel Type</label>
                           <input class="form-control" type="text" id="fuel_type" placeholder="Enter Fuel Type" required>
                         </div>
                     
+                        <!-- Fuel Liters Used -->
                         <div class="col-md-6 mb-3">
                           <label for="fuel_liters_used" class="form-label">Fuel Used (Liters)</label>
                           <input class="form-control" type="number" id="fuel_liters_used" step="0.01" placeholder="Enter liters" required>
                         </div>
+
+                        <div class="col-md-6 mb-3">
+                          <label for="gas_type" class="form-label" id="gas_type">Gas Type</label>
+                          <select class="form-control" id="gas_type">
+                            <option value="">Enter Gas</option>
+                            <option value="co2">CO₂</option>
+                            <option value="ch4">CH₄</option>
+                            <option value="n2o">N₂O</option>
+                          </select>
+                        </div>
+
+                        <!-- Emission Factor -->
+                        <div class="col-md-6 mb-3">
+                          <label for="emission_factor" class="form-label">Emission Factor (kg CO₂e/L)</label>
+                          <input class="form-control" type="number" id="emission_factor" step="0.000001" placeholder="Enter Emission Factor" required>
+                        </div>
+
+                        <!-- GWP -->
+                        <div class="col-md-6 mb-3">
+                          <label for="gwp" class="form-label">Global Warming Potential (GWP)</label>
+                          <input class="form-control" type="number" id="gwp" step="0.01" placeholder="Enter GWP Value" required>
+                        </div>
+
                       </div>
                     
                       <div class="text-center mt-4">
                         <button type="submit" class="custom-button">Save</button>
                       </div>
                     </form>
+                    
                     
                   </div>
                 </div>
