@@ -93,7 +93,7 @@ async function loadScope1Emissions() {
         });
 
         // Column totals
-        yearlyTotalsRow.innerHTML = '<td><strong>Total per Year</strong></td>';
+        yearlyTotalsRow.innerHTML = '<td class="fw-semibold">Total per Year</td>';
         years.forEach(year => {
             const total = columnTotals[year] || 0;
             yearlyTotalsRow.innerHTML += `<td><strong>${total.toFixed(2)}</strong></td>`;

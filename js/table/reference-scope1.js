@@ -47,7 +47,8 @@ async function loadScope1ReferenceDetails() {
 
         // Populate fuel type filter
         const fuelTypes = [...new Set(data.map(item => item.fuel_type))].sort();
-        fuelTypeFilter.innerHTML = `<option value="">All</option>` + fuelTypes.map(ft => `<option value="${ft}">${capitalizeFirstLetter(ft)}</option>`).join('');
+        fuelTypeFilter.innerHTML = `<option value="">All</option>` 
+        + fuelTypes.map(ft => `<option value="${ft}">${capitalizeFirstLetter(ft)}</option>`).join('');
 
         // Initial render (latest year, all fuel types)
         filterAndRender(data, yearFilter.value, fuelTypeFilter.value);
@@ -81,7 +82,7 @@ function renderScope1Table(data) {
     tableBody.innerHTML = '';
 
     if (!data.length) {
-        tableBody.innerHTML = '<p>No data available for selected filters.</p>';
+        tableBody.innerHTML = '<tr><td colspan="9">No data available for selected filters.</td></tr>';
         return;
     }
 
@@ -90,84 +91,99 @@ function renderScope1Table(data) {
     let totalN2O = 0;
     let totalCombined = 0;
 
-    data.forEach(record => {
-        const container = document.createElement('div');
-        container.classList.add('overflow-x-auto', 'border', 'rounded-lg', 'shadow-sm', 'p-4', 'mb-4');
-
-        const heading = document.createElement('h2');
-        heading.classList.add('text-base', 'font-semibold', 'mb-2');
-        heading.textContent = `${capitalizeFirstLetter(record.parameter)} — ${record.fuel_type}`;
-
-        const table = document.createElement('table');
-        table.classList.add('table-auto', 'w-full', 'text-sm', 'text-left');
-
-        const rows = [
-            ['Year', record.year],
-            ['Parameter', capitalizeFirstLetter(record.parameter)],
-            ['Fuel Type', record.fuel_type],
-            ['Total Liters', record.total_liters],
-            ['CO₂ (t)', record.emissions.co2.toFixed(2)],
-            ['CH₄ (t)', record.emissions.ch4.toFixed(2)],
-            ['N₂O (t)', record.emissions.n2o.toFixed(2)],
-            ['EF CO₂', record.emission_factors.co2],
-            ['EF CH₄', record.emission_factors.ch4],
-            ['EF N₂O', record.emission_factors.n2o],
-            ['GWP CO₂', record.gwp.co2],
-            ['GWP CH₄', record.gwp.ch4],
-            ['GWP N₂O', record.gwp.n2o],
-        ];
-
-        rows.forEach(([label, value]) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <th class="bg-gray-100 px-4 py-2 font-medium w-1/3">${label}</th>
-                <td class="px-4 py-2">${value}</td>
-            `;
-            table.appendChild(tr);
-        });
-
-        container.appendChild(heading);
-        container.appendChild(table);
-        tableBody.appendChild(container);
-
-        // Accumulate the emissions for the total calculations
-        totalCO2 += record.emissions.co2;
-        totalCH4 += record.emissions.ch4;
-        totalN2O += record.emissions.n2o;
-        totalCombined += record.emissions.co2 + record.emissions.ch4 + record.emissions.n2o;
-    });
-
-    // Add a row for total emissions for the selected year
-    const totalRow = document.createElement('div');
-    totalRow.classList.add('overflow-x-auto', 'border', 'rounded-lg', 'shadow-sm', 'p-4', 'mb-4');
-
-    const totalHeading = document.createElement('h2');
-    totalHeading.classList.add('text-base', 'font-semibold', 'mb-2');
-    totalHeading.textContent = `Total Emissions for ${data[0].year}`;
-
-    const totalTable = document.createElement('table');
-    totalTable.classList.add('table-auto', 'w-full', 'text-sm', 'text-left');
-
-    const totalRows = [
-        ['Total CO₂ (t)', totalCO2.toFixed(2)],
-        ['Total CH₄ (t)', totalCH4.toFixed(2)],
-        ['Total N₂O (t)', totalN2O.toFixed(2)],
-        ['Total Emissions (t)', totalCombined.toFixed(2)],  // Total combined emissions
-    ];
-
-    totalRows.forEach(([label, value]) => {
+    data.forEach((record, index) => {
         const tr = document.createElement('tr');
+
+        const co2Kg = record.emissions.co2 * 1000;
+        const ch4Kg = record.emissions.ch4 * 1000;
+        const n2oKg = record.emissions.n2o * 1000;
+        const totalEmissionsTCO2e = record.emissions.co2 + record.emissions.ch4 + record.emissions.n2o;
+
+        // Main row for the emission summary
         tr.innerHTML = `
-            <th class="bg-gray-100 px-4 py-2 font-medium w-1/3">${label}</th>
-            <td class="px-4 py-2">${value}</td>
+            <td>${record.year}</td>
+            <td>${capitalizeFirstLetter(record.parameter)}</td>
+            <td>${capitalizeFirstLetter(record.fuel_type)}</td>
+            <td>${record.total_liters.toLocaleString()}</td>
+            <td>${co2Kg.toFixed(2)}</td>
+            <td>${ch4Kg.toFixed(2)}</td>
+            <td>${n2oKg.toFixed(2)}</td>
+            <td>${totalEmissionsTCO2e.toFixed(2)}</td>
+            <td>
+                <button class="toggle-btn bg-green-500 text-white px-2 py-1 rounded text-xs" data-index="${index}">
+                    Show Details
+                </button>
+            </td>
         `;
-        totalTable.appendChild(tr);
+        
+        // Add the row to the table
+        tableBody.appendChild(tr);
+
+        // Add details row for emission factors and GWP
+        const detailsRow = document.createElement('tr');
+        detailsRow.classList.add('hidden');
+        detailsRow.id = `details-${index}`;
+       detailsRow.innerHTML = `
+    <td colspan="9">
+        <div class="bg-gray-50 p-4 rounded shadow text-sm">
+            <strong>Emission Factors:</strong><br>
+            CO₂: <span class="font-normal">${record.emission_factors.co2}</span> |
+            CH₄: <span class="font-normal">${record.emission_factors.ch4}</span> |
+            N₂O: <span class="font-normal">${record.emission_factors.n2o}</span><br><br>
+
+            <strong>Global Warming Potentials (GWP):</strong><br>
+            CO₂: <span class="font-normal">${record.gwp.co2}</span> |
+            CH₄: <span class="font-normal">${record.gwp.ch4}</span> |
+            N₂O: <span class="font-normal">${record.gwp.n2o}</span>
+        </div>
+    </td>
+`;
+
+        tableBody.appendChild(detailsRow);
+
+        // Update the totals
+        totalCO2 += co2Kg;
+        totalCH4 += ch4Kg;
+        totalN2O += n2oKg;
+        totalCombined += totalEmissionsTCO2e;
     });
 
-    totalRow.appendChild(totalHeading);
-    totalRow.appendChild(totalTable);
+    // Add total row at the end of the table
+    const totalRow = document.createElement('tr');
+    totalRow.innerHTML = `
+        <td colspan="4" class="font-semibold text-right">Total</td>
+        <td class="font-semibold">${totalCO2.toFixed(2)}</td>
+        <td class="font-semibold">${totalCH4.toFixed(2)}</td>
+        <td class="font-semibold">${totalN2O.toFixed(2)}</td>
+        <td class="font-semibold">${totalCombined.toFixed(2)}</td>
+        <td></td>
+    `;
     tableBody.appendChild(totalRow);
+
+    // Toggle details row visibility
+   document.querySelectorAll('.toggle-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const index = button.dataset.index;
+        const detailsRow = document.getElementById(`details-${index}`);
+        if (!detailsRow) return;
+
+        const isHidden = detailsRow.classList.contains('hidden');
+
+        // Hide all detail rows and reset button texts
+        document.querySelectorAll('tr[id^="details-"]').forEach(row => row.classList.add('hidden'));
+        document.querySelectorAll('.toggle-btn').forEach(btn => btn.textContent = 'Show Details');
+
+        // Toggle the selected one only if it was previously hidden
+        if (isHidden) {
+            detailsRow.classList.remove('hidden');
+            button.textContent = 'Hide Details';
+        }
+    });
+});
+
+
 }
+
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', loadScope1ReferenceDetails);

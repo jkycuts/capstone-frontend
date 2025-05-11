@@ -1,184 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>GHG Emission Inventory - GreenGauge</title>
-       
-        <link href="css/styles.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>GHG Emission Inventory - GreenGauge</title>
 
-        <script type="module" src="js/dashboard/dashboard.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
-        <script src="js/utils/script.js"></script>
-        <script type="module" src="js/form/company-form.js"></script>
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-        <style>
-            /* Make the table header sticky */
-            thead th {
-                position: sticky;
-                top: 0;
-                background: #f8f9fa;
-                z-index: 2;
-            }
-        
-            /* Make the first column sticky */
-            tbody th, tbody td:first-child {
-                position: sticky;
-                left: 0;
-                background: #ffffff;
-                z-index: 1;
-            }
-        
-            /* Align first column cells */
-            td:first-child, th:first-child {
-                text-align: left;
-                padding-left: 1rem;
-                font-weight: bold;
-                background: #f1f1f1;
-            }
-        </style>
-        
-    
-        
+    <script type="module" src="js/dashboard/dashboard.js"></script>
+    <script src="js/utils/script.js"></script>
+    <script type="module" src="js/form/company-form.js"></script>
 
-    </head>
-    <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-           
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ml-auto me-3 me-lg-4 pe-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        
-                        <li><a class="dropdown-item" href="#" id = "btn_logout">
-                            Logout
-                        </a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Form</div>
-                            
-                            <a class="nav-link collapsed" href="/company-form.html" >
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard"></i></div>
-                                Company
-                                
-                            </a>
-                            <a class="nav-link collapsed" href="/ghg-form.html" >
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-cloud"></i></div>
-                                Ghg Emission
-                                
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                            
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTree" aria-expanded="false" aria-controls="collapseTree">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
-                                Tree
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseTree" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/plantation-form.html"><i class="fa-solid fa-mountain-sun me-2"></i>Plantation</a>
-                                    <a class="nav-link" href="/tree-growth.html"><i class="fa-solid fa-spa me-2"></i>Tree Data</a>
-                                </nav>
-                            </div>
-    
-                            <div class="sb-sidenav-menu-heading">Inventory</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGHG" aria-expanded="false" aria-controls="collapseGHG">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
-                                GHG Emission
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseGHG" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="/scope1-table.html"><i class="fa-solid fa-mountain-sun me-2"></i>Scope 1</a>
-                                    <a class="nav-link" href="/scope2-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 2</a>
-                                    <a class="nav-link" href="/scope3-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 3</a>
-                                    <a class="nav-link" href="/summary-table.html"><i class="fa-solid fa-spa me-2"></i>Summary</a>
-                                </nav>
-                            </div>
+    <style>
+      thead th {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        z-index: 2;
+      }
 
-                            <a class="nav-link" href="carbon-seq.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div>
-                                Carbon Sequestration
-                            </a>
-                        </div>
-                    </div>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                            <span id="user_logged"></span>
-                    </div>
+      tbody th,
+      tbody td:first-child {
+        position: sticky;
+        left: 0;
+        background: #ffffff;
+        z-index: 1;
+      }
+
+      td:first-child,
+      th:first-child {
+        text-align: left;
+        padding-left: 1rem;
+        font-weight: bold;
+        background: #f1f1f1;
+      }
+
+      .custom-table thead {
+        background-color: #f1f5f9;
+        color: #111827;
+      }
+
+      .custom-table th,
+      .custom-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: center;
+        font-size: 0.875rem;
+      }
+
+      .custom-table tbody tr:hover {
+        background-color: #f9fafb;
+      }
+
+      .filter-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .filter-section label {
+        font-weight: 500;
+        margin-right: 0.5rem;
+      }
+
+      .filter-section select {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 1.5rem 0 1rem;
+      }
+    </style>
+  </head>
+  <body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+      <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
+      <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+      <ul class="navbar-nav ms-auto ml-auto me-3 me-lg-4 pe-4">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-bs-toggle="dropdown"><i class="fas fa-user fa-fw"></i></a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" id="btn_logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="layoutSidenav">
+      <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+          <div class="sb-sidenav-menu">
+            <div class="nav">
+              <div class="sb-sidenav-menu-heading">Core</div>
+              <a class="nav-link" href="index.html"><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div> Dashboard</a>
+
+              <div class="sb-sidenav-menu-heading">Form</div>
+              <a class="nav-link" href="/company-form.html"><div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard"></i></div> Company</a>
+              <a class="nav-link" href="/ghg-form.html"><div class="sb-nav-link-icon"><i class="fa-solid fa-cloud"></i></div> Ghg Emission</a>
+
+              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTree"><div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div> Tree <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div></a>
+              <div class="collapse" id="collapseTree" data-bs-parent="#sidenavAccordion">
+                <nav class="sb-sidenav-menu-nested nav">
+                  <a class="nav-link" href="/plantation-form.html"><i class="fa-solid fa-mountain-sun me-2"></i>Plantation</a>
+                  <a class="nav-link" href="/tree-growth.html"><i class="fa-solid fa-spa me-2"></i>Tree Data</a>
                 </nav>
+              </div>
+
+              <div class="sb-sidenav-menu-heading">Inventory</div>
+              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGHG"><div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div> GHG Emission <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div></a>
+              <div class="collapse" id="collapseGHG" data-bs-parent="#sidenavAccordion">
+                <nav class="sb-sidenav-menu-nested nav">
+                  <a class="nav-link" href="/scope1-table.html"><i class="fa-solid fa-mountain-sun me-2"></i>Scope 1</a>
+                  <a class="nav-link" href="/scope2-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 2</a>
+                  <a class="nav-link" href="/scope3-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 3</a>
+                  <a class="nav-link" href="/summary-table.html"><i class="fa-solid fa-spa me-2"></i>Summary</a>
+                </nav>
+              </div>
+
+              <a class="nav-link" href="carbon-seq.html"><div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div> Carbon Sequestration</a>
             </div>
+          </div>
+          <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:</div>
+            <span id="user_logged"></span>
+          </div>
+        </nav>
+      </div>
 
-            
-            <div id="layoutSidenav_content">
-                <a href="" class="py-4 text-2xl">Table with Reference Value</a>
-                <div class="container text-center my-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; margin: 0 auto;">
+      <div id="layoutSidenav_content">
+        <main class="container-fluid px-4">
+          <h2 class="section-title">Scope 1 Detailed Emission Report</h2>
+          <div class="filter-section">
+            <label for="yearFilter">Year:</label>
+            <select id="yearFilter"></select>
 
-                                <!-- Notifications -->
-                <div class="alert alert-success d-none" role="alert"></div>
-                <div class="alert alert-danger d-none" role="alert"></div>
+            <label for="fuelTypeFilter">Fuel Type:</label>
+            <select id="fuelTypeFilter">
+              <option value="">All</option>
+              <!-- JS dynamically adds options -->
+            </select>
+          </div>
+
+          <!-- Notifications -->
+          <div class="alert alert-success d-none" role="alert"></div>
+          <div class="alert alert-danger d-none" role="alert"></div>
+                <!-- Scope 1 Summary Table -->
                 <div class="table-responsive">
-                    
-                    <div class="container-fluid px-4 mb-4">
-                        <div class="card mb-4">
-                            <h3 class="mt-8 text-xl font-semibold">Scope 1 Detailed Emission Report</h3>
-                    
-                            <div class="mt-4 mb-2">
-                                <label for="yearFilter" class="block text-sm font-medium mb-1">Filter by Year:</label>
-                                <select id="yearFilter" class="border rounded px-2 py-1">
-                                    <!-- Options will be added dynamically -->
-                                </select>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="fuelTypeFilter" class="block text-sm font-medium mb-1">Filter by Fuel Type:</label>
-                                <select id="fuelTypeFilter" class="border rounded px-2 py-1 w-full max-w-xs">
-                                    <option value="">All</option>
-                                    <!-- Populated via JS -->
-                                </select>
-                            </div>
-                    
-                            <div class="overflow-x-auto mt-4" id="scope1_details_body">
-                                <!-- JS will insert multiple vertical tables here -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-            </div> 
-        </div>
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; GreenGauge 2025</div>
-                    
+                <table class="table custom-table">
+                    <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Parameter</th>
+                        <th>Fuel Type</th>
+                        <th>Total Fuel Consumed (L)</th>
+                        <th>CO₂ (kg)</th>
+                        <th>CH₄ (kg)</th>
+                        <th>N₂O (kg)</th>
+                        <th>Total Emissions (tCO₂e)</th>
+                        <th>Details</th>
+                    </tr>
+                    </thead>
+                   <tbody id="scope1_details_body" class="table-responsive"> 
+</tbody>
+                </table>
                 </div>
+
+        </main>
+
+        <footer class="py-4 bg-light mt-auto">
+          <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+              <div class="text-muted">Copyright &copy; GreenGauge 2025</div>
             </div>
+          </div>
         </footer>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-       
-        <script type="module" src="/js/table/reference-scope1.js"></script>
-    </body>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script type="module" src="/js/table/reference-scope1.js"></script>
+  </body>
 </html>

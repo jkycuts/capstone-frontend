@@ -40,6 +40,16 @@
                 font-weight: bold;
                 background: #f1f1f1;
             }
+
+            .total-emission {
+                font-size: 1rem;
+            }
+
+            #scope1_table th,
+            #scope1_table td {
+                vertical-align: middle;
+            }
+
         </style>
         
     
@@ -143,52 +153,52 @@
                 <div class="alert alert-danger d-none" role="alert"></div>
                 <div class="table-responsive">
                     
-                    <div class="container-fluid px-4 mb-4">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Scope 1: Emission from Fuel Consumption
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="scope1_table" class="table table-striped table-bordered align-middle text-center">
-                                        <thead>
-                                            <tr id="scope1_table_header">
-                                                <th style="z-index:3;">Parameter</th>
-                                                <!-- Year columns will be inserted here dynamically -->
-                                                <th>Total TCO₂</th> <!-- Last column for row totals -->
-                                            </tr>
-                                        </thead>
-                                        <tbody id="scope1_table_body">
-                                            <tr data-parameter="Transportation">
-                                                <td>Transportation</td>
-                                                <!-- Emission cells for years will be inserted here -->
-                                                <td class="total-emission">0</td>
-                                            </tr>
-                                            <tr data-parameter="Production">
-                                                <td>Production</td>
-                                                <!-- Emission cells for years will be inserted here -->
-                                                <td class="total-emission">0</td>
-                                            </tr>
-                                            <tr data-parameter="Electric Generation">
-                                                <td>Electric Generation</td>
-                                                <!-- Emission cells for years will be inserted here -->
-                                                <td class="total-emission">0</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr id="yearly_totals_row">
-                                                <td><strong>Total per Year</strong></td>
-                                                <!-- Totals per year will be inserted here -->
-                                                <td id="overall_total"><strong>0</strong></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                            
+                    <div class="container-fluid px-4 mb-5">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-success text-white fw-semibold">
+                            <i class="fas fa-table me-1"></i>
+                            Scope 1: Emissions from Fuel Consumption
                         </div>
-                  </div>  
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="scope1_table" class="table table-bordered table-hover align-middle text-center">
+                                    <thead class="table-light">
+                                        <tr id="scope1_table_header">
+                                            <th style="z-index:3;">Parameter</th>
+                                            <!-- Year columns will be inserted here dynamically -->
+                                            <th>Total TCO₂</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scope1_table_body">
+                                        <tr data-parameter="Transportation">
+                                            <td class="fw-medium">Transportation</td>
+                                            <!-- Emission cells for years will be inserted here -->
+                                            <td class="total-emission text-primary fw-bold">0</td>
+                                        </tr>
+                                        <tr data-parameter="Production">
+                                            <td class="fw-medium">Production</td>
+                                            <!-- Emission cells for years will be inserted here -->
+                                            <td class="total-emission text-primary fw-bold">0</td>
+                                        </tr>
+                                        <tr data-parameter="Electric Generation">
+                                            <td class="fw-medium">Electric Generation</td>
+                                            <!-- Emission cells for years will be inserted here -->
+                                            <td class="total-emission text-primary fw-bold">0</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr id="yearly_totals_row" class="table-light">
+                                            <td class="fw-semibold text-end pe-3">Total per Year</td>
+                                            <!-- Totals per year will be inserted here -->
+                                            <td id="overall_total" class="fw-bold text-success">0</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
             </div> 
         </div>
         <footer class="py-4 bg-light mt-auto">

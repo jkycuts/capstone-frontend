@@ -19,8 +19,8 @@ async function loadScope2Emissions() {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();  // Read error text
-            console.error("Error response:", errorText);  // Log error text
+            const errorText = await response.text();
+            console.error("Error response:", errorText);
             throw new Error("Failed to fetch Scope 2 records.");
         }
 
@@ -33,20 +33,60 @@ async function loadScope2Emissions() {
         // Clear the table before inserting new data
         tableBody.innerHTML = '';
 
-        // Populate the table with Scope 2 records
+        // Prepare an object to hold emissions data per year
+        const emissionsByYear = {};
+
+        // Populate the emissionsByYear object
         scope2Data.forEach(record => {
             const year = record.year;
             const emissionValue = parseFloat(record.emission_tco2e).toFixed(3); // Ensure number formatting
-            
-            // Create a table row for each record
-            const row = `
-                <tr>
-                    <td>${year}</td>
-                    <td>${record.emission_tco2e}</td>
-                </tr>
-            `;
-            tableBody.insertAdjacentHTML('beforeend', row);
+
+            // Initialize the year if it doesn't exist
+            if (!emissionsByYear[year]) {
+                emissionsByYear[year] = {
+                    totalEmissions: 0,   // Total emissions for this year
+                    monthlyEmissions: {} // For storing monthly emissions data
+                };
+            }
+
+            // If the data is monthly or quarterly, add it to the appropriate place
+            if (!emissionsByYear[year].monthlyEmissions[record.month]) {
+                emissionsByYear[year].monthlyEmissions[record.month] = 0;
+            }
+
+            emissionsByYear[year].monthlyEmissions[record.month] += parseFloat(record.emission_tco2e);
+            emissionsByYear[year].totalEmissions += parseFloat(record.emission_tco2e);
         });
+
+        // Dynamically create rows for each year and month data
+        Object.keys(emissionsByYear).forEach(year => {
+            const yearData = emissionsByYear[year];
+            let row = document.createElement('tr');
+            
+            // Year cell
+            const tdYear = document.createElement('td');
+            tdYear.textContent = year;
+            row.appendChild(tdYear);
+
+            // Add the total TCO₂ emissions for the year
+            const tdTotal = document.createElement('td');
+            tdTotal.textContent = yearData.totalEmissions.toFixed(3);
+            row.appendChild(tdTotal);
+
+            // Append the row to the table body
+            tableBody.appendChild(row);
+        });
+
+        // Compute overall total emissions and update
+        let overallTotal = 0;
+        Object.values(emissionsByYear).forEach(yearData => {
+            overallTotal += yearData.totalEmissions;
+        });
+
+        const overallTotalCell = document.getElementById('overall_total');
+        if (overallTotalCell) {
+            overallTotalCell.textContent = overallTotal.toFixed(3);
+        }
 
     } catch (err) {
         console.error("Error loading Scope 2 inventory:", err);
