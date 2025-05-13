@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Scope 1 Detailed Report - GreenGauge</title>
+    <title>Scope 2 Detailed Report - GreenGauge</title>
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
@@ -141,16 +141,12 @@
 
       <div id="layoutSidenav_content">
         <main class="container-fluid px-4">
-          <h2 class="section-title">Scope 1 Detailed Emission Report</h2>
+          <h2 class="section-title">Scope 2 Detailed Emission Report</h2>
           <div class="filter-section">
             <label for="yearFilter">Year:</label>
             <select id="yearFilter"></select>
 
-            <label for="fuelTypeFilter">Fuel Type:</label>
-            <select id="fuelTypeFilter">
-              <option value="">All</option>
-              <!-- JS dynamically adds options -->
-            </select>
+           
           </div>
 
           <!-- Notifications -->
@@ -162,18 +158,16 @@
                     <thead>
                     <tr>
                         <th>Year</th>
-                        <th>Parameter</th>
-                        <th>Fuel Type</th>
-                        <th>Total Fuel Consumed (L)</th>
-                        <th>CO₂ (kg)</th>
-                        <th>CH₄ (kg)</th>
-                        <th>N₂O (kg)</th>
-                        <th>Total Emissions (tCO₂e)</th>
-                        <th>Details</th>
+                        <th>Quarter</th>
+                        <th>Month</th>
+                        <th>Total kWh</th>
+                        <th>Emission Factor</th>
+                        <th>Total Emission (tCO₂e)</th>
                     </tr>
                     </thead>
-                   <tbody id="scope1_details_body" class="table-responsive"> 
-</tbody>
+                   <tbody id="scope2_details_body" class="table-responsive"> 
+
+                    </tbody>
                 </table>
                 </div>
 
@@ -190,6 +184,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script type="module" src="/js/table/reference-scope1.js"></script>
+    <script type="module" src="/js/table/reference-scope2.js"></script>
   </body>
 </html>

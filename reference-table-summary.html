@@ -120,15 +120,48 @@
                 <!-- Make table scrollable on smaller screens -->
                 <div class="table-responsive">
                     
-                    <h2>GHG Emissions Summary (Scope 1, 2, 3)</h2>
+                    <h2>Scope 1 Emissions</h2>
+<table id="scope1-reference-table" class="table-auto w-full border-collapse border">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Fuel Type</th>
+            <th>Total Fuel</th>
+            <th>Emission Factor</th>
+            <th>tCO₂e</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-                    <div class="table-responsive">
-                        <table id="summary_table" class="table table-striped table-bordered align-middle text-center">
-                            <thead class="table-warning" id="summary_table_head"></thead>
-                            <tbody id="summary_table_body"></tbody>
-                            <tfoot class="table-info" id="summary_table_foot"></tfoot>
-                        </table>
-                    </div>
+<h2>Scope 2 Emissions</h2>
+<table id="scope2-reference-table" class="table-auto w-full border-collapse border">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Electricity Type</th>
+            <th>Total kWh</th>
+            <th>Emission Factor</th>
+            <th>tCO₂e</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<h2>Scope 3 Emissions</h2>
+<table id="scope3-reference-table" class="table-auto w-full border-collapse border">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Travel Type</th>
+            <th>Total Distance (km)</th>
+            <th>Emission Factor</th>
+            <th>tCO₂e</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
                 
 
                 </div>                              
@@ -149,7 +182,7 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
        <!-- JS Loader -->
-                <script type="module" src="js/table/summary-table.js"></script>
+                <script type="module" src="js/table/reference-table-summary.js"></script>
        
     </body>
 </html>

@@ -2,61 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Super Admin Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-  <script type="module" src="js/admin.dasboard/admin-login.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-
-  <div class="max-w-7xl mx-auto p-6">
-    <header class="mb-6 flex justify-between items-center">
-      <h1 class="text-4xl font-semibold text-gray-900">Super Admin Dashboard</h1>
-      <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
-    </header>
-
-    <!-- Admin-only section -->
-    <div class="admin-section hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">Manage Users</h2>
-        <p class="text-gray-700">View and manage users who have access to the system.</p>
-        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Go to User Management</button>
-      </div>
-
-      <div class="bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">View Reports</h2>
-        <p class="text-gray-700">Generate and view system reports based on data.</p>
-        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Generate Reports</button>
-      </div>
-
-      <div class="bg-white p-6 rounded shadow">
-        <h2 class="text-xl font-semibold mb-4">System Settings</h2>
-        <p class="text-gray-700">Modify system-wide settings and configurations.</p>
-        <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Manage Settings</button>
-      </div>
+<body class="bg-gray-100 p-6">
+  <!-- 1. Summary Dashboard -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-sm font-medium text-gray-500">Total GHG Emissions</h3>
+      <p id="total-emissions" class="text-2xl font-bold text-red-600">0 TCO₂</p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-sm font-medium text-gray-500">Total Carbon Sequestration</h3>
+      <p id="total-sequestration" class="text-2xl font-bold text-green-600">0 TCO₂</p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-sm font-medium text-gray-500">Net Carbon Variance</h3>
+      <p id="net-variance" class="text-2xl font-bold text-blue-600">0 TCO₂</p>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-sm font-medium text-gray-500">% of National GHG Contribution</h3>
+      <p id="national-contribution" class="text-2xl font-bold text-purple-600">0%</p>
     </div>
   </div>
 
-  <script>
-    // Check role from localStorage
-    const role = localStorage.getItem("role");
-    const adminSection = document.querySelector(".admin-section");
+  <!-- 2. Trend Charts -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-lg font-semibold mb-2">Emissions Over Time</h3>
+      <canvas id="emissionsChart"></canvas>
+    </div>
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="text-lg font-semibold mb-2">Sequestration Over Time</h3>
+      <canvas id="sequestrationChart"></canvas>
+    </div>
+  </div>
 
-    // Only allow access to super_admins
-    if (role === "super_admin") {
-      adminSection.classList.remove("hidden");
-    } else {
-      // Redirect to unauthorized page or user dashboard
-      window.location.href = "/unauthorized.html"; // or "/user-dashboard.html"
-    }
+  <!-- 3. Company Monitoring Table -->
+  <div class="bg-white p-4 rounded shadow">
+    <div class="flex justify-between mb-4">
+      <input type="text" id="companySearch" class="border px-3 py-2 rounded w-1/3" placeholder="Search Company..." />
+      <select id="industryFilter" class="border px-3 py-2 rounded">
+        <option value="">All Industries</option>
+        <option value="Mining">Mining</option>
+        <option value="Agriculture">Agriculture</option>
+        <!-- Add more industries as needed -->
+      </select>
+    </div>
+    <table class="w-full text-sm text-left table-auto border">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-2 border">Company</th>
+          <th class="p-2 border">Industry</th>
+          <th class="p-2 border">Year</th>
+          <th class="p-2 border">GHG Emissions</th>
+          <th class="p-2 border">Carbon Sequestration</th>
+          <th class="p-2 border">Net Variance</th>
+          <th class="p-2 border">Status</th>
+        </tr>
+      </thead>
+      <tbody id="companyTableBody">
+        <!-- Data loaded via JS -->
+      </tbody>
+    </table>
+  </div>
 
-    function logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-      localStorage.removeItem("user");
-      window.location.href = "/login.html";
-    }
-  </script>
-
+  <script src="admin-dashboard.js"></script>
 </body>
 </html>

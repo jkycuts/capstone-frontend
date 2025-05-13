@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Scope 1 Detailed Report - GreenGauge</title>
+    <title>Scope 2 Detailed Report - GreenGauge</title>
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
@@ -141,41 +141,40 @@
 
       <div id="layoutSidenav_content">
         <main class="container-fluid px-4">
-          <h2 class="section-title">Scope 1 Detailed Emission Report</h2>
-          <div class="filter-section">
-            <label for="yearFilter">Year:</label>
-            <select id="yearFilter"></select>
+          <h2 class="section-title">Scope 3 Detailed Emission Report</h2>
 
-            <label for="fuelTypeFilter">Fuel Type:</label>
-            <select id="fuelTypeFilter">
-              <option value="">All</option>
-              <!-- JS dynamically adds options -->
-            </select>
-          </div>
+          <div class="filter-section mb-4">
 
-          <!-- Notifications -->
-          <div class="alert alert-success d-none" role="alert"></div>
-          <div class="alert alert-danger d-none" role="alert"></div>
-                <!-- Scope 1 Summary Table -->
-                <div class="table-responsive">
+                <label for="yearFilter">Year:</label>
+                <select id="yearFilter" class="mr-2"></select>
+
+            </div>
+
+            <!-- Notifications -->
+            <div class="alert alert-success d-none" role="alert"></div>
+            <div class="alert alert-danger d-none" role="alert"></div>
+
+            <!-- Scope 3 Summary Table -->
+            <div class="table-responsive">
                 <table class="table custom-table">
                     <thead>
-                    <tr>
-                        <th>Year</th>
-                        <th>Parameter</th>
-                        <th>Fuel Type</th>
-                        <th>Total Fuel Consumed (L)</th>
-                        <th>CO₂ (kg)</th>
-                        <th>CH₄ (kg)</th>
-                        <th>N₂O (kg)</th>
-                        <th>Total Emissions (tCO₂e)</th>
-                        <th>Details</th>
-                    </tr>
+                        <tr>
+                            <th>Year</th>
+                            <th>Category</th>
+                            <th>Quarter</th>
+                            <th>Month</th>
+                            <th>Total Distance</th>
+                            <th>CO₂ (kg)</th>
+                            <th>CH₄ (kg)</th>
+                            <th>N₂O (kg)</th>
+                            <th>Total Emission (tCO₂e)</th>
+                            <th>Details</th>
+                        </tr>
                     </thead>
-                   <tbody id="scope1_details_body" class="table-responsive"> 
-</tbody>
+                    <tbody id="scope3_details_body"></tbody>
                 </table>
-                </div>
+            </div>
+
 
         </main>
 
@@ -190,6 +189,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script type="module" src="/js/table/reference-scope1.js"></script>
+    <script type="module" src="/js/table/reference-scope3.js"></script>
   </body>
 </html>

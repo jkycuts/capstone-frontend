@@ -1,121 +1,95 @@
 import { backendURL, errorNotification } from '../utils/utils.js';
 
-document.addEventListener('DOMContentLoaded', loadGHGSummary);
+document.addEventListener('DOMContentLoaded', loadGHGSummaryTable);
 
-async function loadGHGSummary() {
+async function loadGHGSummaryTable() {
     const token = localStorage.getItem('token');
-    if (!token) {
-        errorNotification("No token found. Please log in.", 5);
-        return;
-    }
+    if (!token) return errorNotification("No token found.", 5);
 
-    try {
-        const [scope1, scope2, scope3] = await Promise.all([
-            fetchScopeData(`${backendURL}/api/ghg-emission/fuel`, token),
-            fetchScopeData(`${backendURL}/api/ghg-emission/electricity`, token),
-            fetchScopeData(`${backendURL}/api/ghg-emission/travel`, token),
-        ]);
+    const endpoints = [
+        { label: "Fuel Consumption", url: "/api/ghg-emission/fuel/details" },             // Scope 1
+        { label: "Electricity",      url: "/api/ghg-emission/electricity/details" },     // Scope 2
+        { label: "Business Travel",  url: "/api/ghg-emission/travel/details" }          // Scope 3
+    ];
 
-        console.log("Scope 1:", scope1);
-        console.log("Scope 2:", scope2);
-        console.log("Scope 3:", scope3);
+    const yearSet = new Set();
+    const scopeData = {};
 
-        const summaryData = {
-            'Scope 1': summarize(scope1),
-            'Scope 2': summarize(scope2),
-            'Scope 3': summarize(scope3)
-        };
+    for (const { label, url } of endpoints) {
+        try {
+            const res = await fetch(`${backendURL}${url}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error(`Failed to load ${label} data`);
 
-        renderSummary(summaryData);
+             
 
-        
+            const records = await res.json();
+            console.log(`${label} records:`, records); // ✅ Debug here
 
-    } catch (err) {
-        console.error("Failed to load summary data:", err);
-        errorNotification("Error loading emissions summary.", 5);
-    }
-}
+            if (!Array.isArray(records)) continue;
 
-async function fetchScopeData(url, token) {
-    const response = await fetch(url, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json'
+            scopeData[label] = {};
+
+            records.forEach(record => {
+                const year = record.year;
+                const emission = parseFloat(record.emission_tco2e || 0);
+                yearSet.add(year);
+                if (!scopeData[label][year]) scopeData[label][year] = 0;
+                scopeData[label][year] += emission;
+            });
+
+        } catch (err) {
+            console.error(err);
+            errorNotification(`Error loading ${label} emissions.`, 5);
         }
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Fetch failed: ${errorText}`);
     }
 
-    return await response.json();
-}
+    const years = [...yearSet].sort(); // Sorted list of all years
+    const tableHead = document.getElementById('summary_table_head');
+    const tableBody = document.getElementById('summary_table_body');
+    const tableFoot = document.getElementById('summary_table_foot');
 
-function summarize(records) {
-    const yearlyTotals = {
-        2021: 0,
-        2022: 0,
-        2023: 0,
-        2024: 0,
-        2025: 0
-        
-    };
+    // Build table header
+    tableHead.innerHTML = `
+        <tr>
+            <th>Scope</th>
+            ${years.map(y => `<th>${y} (tCO₂)</th>`).join('')}
+            <th>Total (tCO₂)</th>
+        </tr>
+    `;
 
-    records.forEach(record => {
-        const year = parseInt(record.year);
-        const emission = parseFloat(record.emission_tco2e);
-        if (yearlyTotals[year] !== undefined) {
-            yearlyTotals[year] += emission;
+    // Build table body
+    let grandTotal = 0;
+    const yearTotals = {};
+    years.forEach(y => yearTotals[y] = 0);
+    tableBody.innerHTML = '';
+
+    for (const [label, yearlyData] of Object.entries(scopeData)) {
+        let row = `<tr><td>${label}</td>`;
+        let rowTotal = 0;
+
+        for (const year of years) {
+            const value = yearlyData[year] || 0;
+            yearTotals[year] += value;
+            rowTotal += value;
+            row += `<td>${value.toFixed(3)}</td>`;
         }
-    });
 
-    yearlyTotals.total = Object.values(yearlyTotals).reduce((sum, v) => sum + v, 0);
-    return yearlyTotals;
-}
-
-function renderSummary(data) {
-    const tbody = document.getElementById('summary_table_body');
-    const totalsByYear = { 2021: 0, 2022: 0, 2023: 0, 2024: 0, 2025: 0 };
-    let overallTotal = 0;
-
-    tbody.innerHTML = '';
-
-    Object.entries(data).forEach(([scope, emissions]) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${scope}</td>
-            <td>${emissions[2021].toFixed(3)}</td>
-            <td>${emissions[2022].toFixed(3)}</td>
-            <td>${emissions[2023].toFixed(3)}</td>
-            <td>${emissions[2024].toFixed(3)}</td>
-            <td>${emissions[2025].toFixed(3)}</td>
-            <td>${emissions.total.toFixed(3)}</td>
-        `;
-        tbody.appendChild(row);
-
-        // Totals per year
-        totalsByYear[2021] += emissions[2021];
-        totalsByYear[2022] += emissions[2022];
-        totalsByYear[2023] += emissions[2023];
-        totalsByYear[2024] += emissions[2024];
-        overallTotal += emissions.total;
-    });
-
-    // Update footer totals
-    document.getElementById('year_total_2021').textContent = totalsByYear[2021].toFixed(3);
-    document.getElementById('year_total_2022').textContent = totalsByYear[2022].toFixed(3);
-    document.getElementById('year_total_2023').textContent = totalsByYear[2023].toFixed(3);
-    document.getElementById('year_total_2024').textContent = totalsByYear[2024].toFixed(3);
-    document.getElementById('year_total_2025').textContent = totalsByYear[2025].toFixed(3);
-    document.getElementById('overall_total').textContent = overallTotal.toFixed(3);
-
-    // Update dashboard GHG emission display
-    const totalDisplay = document.getElementById('total_ghg_emission');
-    if (totalDisplay) {
-        totalDisplay.textContent = overallTotal.toLocaleString(undefined, {
-            minimumFractionDigits: 3,
-            maximumFractionDigits: 3
-        }) + ' tCO₂e';
+        grandTotal += rowTotal;
+        row += `<td>${rowTotal.toFixed(3)}</td></tr>`;
+        tableBody.innerHTML += row;
     }
+
+    // Build table footer
+    let footerRow = `<tr><th>Total</th>`;
+    for (const year of years) {
+        footerRow += `<th id="year_total_${year}">${yearTotals[year].toFixed(3)}</th>`;
+    }
+    footerRow += `<th id="overall_total">${grandTotal.toFixed(3)}</th></tr>`;
+    tableFoot.innerHTML = footerRow;
 }
+
+document.addEventListener('DOMContentLoaded', loadGHGSummaryTable);
+
+
