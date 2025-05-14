@@ -13,6 +13,7 @@
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -143,17 +144,27 @@
                 <main>
                     <div class="container-fluid px-4 mb-4">
                         <h1 class="mt-2 text-2xl font-bold text-gray-800">Dashboard</h1>
-                        <a href="admin.html">Admin</a>
+                        
+                        <!-- Admin Button -->
+                            <div class="mb-4">
+                                <a href="admin.html">
+                                    <button class="bg-blue-500 text-black px-2 py-1 text-sm rounded shadow hover:bg-blue-600">
+                                        Go to Admin Page
+                                    </button>
+                                </a>
+                            </div>
+
                     
                         <!-- Notifications -->
                         <div class="alert alert-success d-none mt-3" role="alert"></div>
-                        <div class="alert alert-danger d-none mt-3" role="alert"></div>
-                    
+                        <div class="alert alert-danger d-none mt-3" role="alert"></div>                  
+
+
                         <!-- Carbon Summary Section -->
                         <div class="bg-white p-6 rounded-xl shadow mb-8 mt-4">
                             <h2 id="carbonStatus" class="text-lg font-semibold mb-4 text-center"></h2>
                     
-                            <div class="row text-center px-10">
+                            <div class="row text-center px-10 mb-4">
 
                                 <div class="col-12 my-4">
                                     <div class="p-4 bg-white shadow rounded-xl">
@@ -163,9 +174,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
-
                                 <div class="col-12 col-md-6 col-lg-3 my-2">
                                     <div class="p-4 bg-white shadow rounded-xl h-100">
                                         <p class="text-muted">Total GHG Emission</p>
@@ -191,9 +199,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div id="carbon-status" class="status-signal p-4 pt-3 rounded-xl mb-6 flex items-center space-x-4 shadow-md border">
+                                <div id="carbon-status-icon" class="w-5 h-5 rounded-full ring-2 ring-white animate-pulse shadow-lg"></div>
+                                <div>
+                                    <p id="carbon-status-text" class="text-lg font-semibold"></p>
+                                    <p id="carbon-status-description" class="text-sm text-gray-500">Status of your carbon footprint</p>
+                                </div>
+                                </div>
+
+
                         </div>
 
-
+                        
                     
                         <!-- Geospatial Map Section -->
                         <div class="container-fluid bg-white p-4 p-md-6 rounded-2xl shadow-lg mb-10 mt-5">

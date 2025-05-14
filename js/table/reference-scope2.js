@@ -90,7 +90,7 @@ function renderScope2Table(data) {
             <td>${monthName}</td>
             <td>${kwh.toLocaleString()} </td>
             <td>${parseFloat(record.emission_factor).toFixed(4)}</td>
-            <td>${emission.toFixed(4)}</td>
+            <td>${(emission / 1000).toFixed(4)}</td>
         `;
         tableBody.appendChild(tr);
     });
@@ -101,7 +101,8 @@ function renderScope2Table(data) {
         <td colspan="3" class="font-bold text-right">Total</td>
         <td class="font-bold">${totalKwh.toLocaleString()} kWh</td>
         <td></td>
-        <td class="font-bold">${totalEmissions.toFixed(4)}</td>
+        <td class="font-bold">${(totalEmissions / 1000).toFixed(4)}</td>
+
     `;
     tableBody.appendChild(totalRow);
 }

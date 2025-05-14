@@ -38,7 +38,6 @@ async function getLoggedUser() {
 }
 getLoggedUser();
 
-
 // Render GHG Chart
 function renderGHGChart(totalEmission, totalSequestration, carbonVariance, percentageGHG) {
     const ctx = document.getElementById("ghgChart").getContext("2d");
@@ -91,6 +90,42 @@ function renderGHGChart(totalEmission, totalSequestration, carbonVariance, perce
     });
 }
 
+// Render Carbon Status Signal
+function renderStatusSignal(totalEmissions, totalSequestration) {
+    const icon = document.getElementById("carbon-status-icon");
+    const text = document.getElementById("carbon-status-text");
+    const container = document.getElementById("carbon-status");
+
+    if (!icon || !text || !container) return;
+
+    let status = "";
+    let iconColor = "";
+    let containerBg = "";
+    let textColor = "";
+
+    if (totalSequestration > totalEmissions) {
+        status = "Carbon Positive";
+        iconColor = "bg-green-500";
+        containerBg = "bg-green-50 border-green-300";
+        textColor = "text-green-700";
+    } else if (totalSequestration === totalEmissions) {
+        status = "Carbon Neutral";
+        iconColor = "bg-gray-500";
+        containerBg = "bg-gray-50 border-gray-300";
+        textColor = "text-gray-700";
+    } else {
+        status = "Carbon Negative";
+        iconColor = "bg-red-500";
+        containerBg = "bg-red-50 border-red-300";
+        textColor = "text-red-700";
+    }
+
+    // Apply styles
+    icon.className = `w-5 h-5 rounded-full ring-2 ring-white animate-pulse shadow-md ${iconColor}`;
+    container.className = `status-signal p-4 rounded-xl mb-6 flex items-center space-x-4 shadow-md border ${containerBg}`;
+    text.className = `text-lg font-semibold ${textColor}`;
+    text.textContent = status;
+}
 
 
 // Fetch Dashboard Summary Data
@@ -121,19 +156,19 @@ async function getDashboardData() {
                 percentage_contribution
             } = data;
 
-            // Update DOM elements
             document.getElementById("totalEmission").textContent = `${totalEmission} TCO₂`;
             document.getElementById("totalSequestration").textContent = `${total_sequestration} TCO₂`;
             document.getElementById("carbonVariance").textContent = `${carbon_variance} TCO₂`;
             document.getElementById("percentageGHG").textContent = `${percentage_contribution}%`;
 
-            // Render GHG Chart
             renderGHGChart(
                 totalEmission,
                 total_sequestration,
                 carbon_variance,
                 percentage_contribution
             );
+
+            renderStatusSignal(totalEmission, total_sequestration);
         } else {
             errorNotification(data.message || "Failed to load dashboard summary.", 10);
         }
@@ -143,11 +178,8 @@ async function getDashboardData() {
     }
 }
 
-
-
-
 // Load Tree Locations into the Map
-let treeMarkers = []; // declared globally
+let treeMarkers = [];
 let map;
 
 async function loadTreeMapMarkers(map) {
@@ -172,10 +204,9 @@ async function loadTreeMapMarkers(map) {
             throw new Error(result.message || "Failed to fetch tree data");
         }
 
-        // Check if 'data' is an array
         const trees = result.data;
         if (Array.isArray(trees)) {
-            treeMarkers = []; // reset existing markers
+            treeMarkers = [];
 
             trees.forEach(tree => {
                 if (tree.latitude && tree.longitude) {
@@ -207,8 +238,6 @@ async function loadTreeMapMarkers(map) {
     }
 }
 
-
-
 function initializeTreeMap() {
     map = L.map('map').setView([8.947340, 125.534190], 13);
 
@@ -217,11 +246,7 @@ function initializeTreeMap() {
     }).addTo(map);
 
     loadTreeMapMarkers(map);
-
-   
 }
-
-
 
 // On Dashboard Page Load
 if (document.body.dataset.page === "dashboard") {

@@ -1,91 +1,180 @@
-import { backendURL, errorNotification } from '../utils/utils.js';
+import { backendURL, successNotification, errorNotification } from '../utils/utils.js';
 
-document.addEventListener("DOMContentLoaded", function () {
-  loadKPIs();
-  loadTrendCharts();
-  loadCompanyTable();
+let ghgChart; // Declare chart globally to update it later
 
-  document.getElementById("companySearch").addEventListener("input", loadCompanyTable);
-  document.getElementById("industryFilter").addEventListener("change", loadCompanyTable);
+document.addEventListener("DOMContentLoaded", () => {
+  fetchYears();
 });
 
-async function loadKPIs() {
-  try {
-    const response = await axios.get("/api/admin/summary");
-    const data = response.data;
+ document.getElementById("goToUserPage").addEventListener("click", function() {
+        window.location.href = "/user-page"; // Redirect to the user page
+    });
 
-    document.getElementById("total-emissions").innerText = `${data.total_emissions} TCO₂`;
-    document.getElementById("total-sequestration").innerText = `${data.total_sequestration} TCO₂`;
-    document.getElementById("net-variance").innerText = `${data.net_variance} TCO₂`;
-    document.getElementById("national-contribution").innerText = `${data.national_ghg_percent}%`;
-  } catch (error) {
-    console.error("Failed to load KPI data", error);
+// Fetch available years for the dropdown
+async function fetchYears() {
+  try {
+    const response = await fetch(backendURL + "/api/admin/years");
+    if (!response.ok) throw new Error("Failed to fetch years");
+
+    const years = await response.json();
+    const yearSelect = document.getElementById("yearSelect");
+
+    yearSelect.innerHTML = ""; // clear loading option
+
+    years.forEach(({ year }) => {
+      const option = document.createElement("option");
+      option.value = year;
+      option.textContent = year;
+      yearSelect.appendChild(option);
+    });
+
+    // Auto-load first year
+    if (years.length > 0) {
+      yearSelect.value = years[0].year;
+      fetchGHGSummary(years[0].year);
+    }
+
+    yearSelect.addEventListener("change", (e) => {
+      const selectedYear = e.target.value;
+      fetchGHGSummary(selectedYear);
+    });
+
+    document.getElementById("companySearch").addEventListener("input", () => {
+      filterTable();
+    });
+
+  } catch (err) {
+    console.error(err);
+    showError("Unable to load years.");
   }
 }
 
-async function loadTrendCharts() {
+// Fetch GHG Summary from backend for selected year
+async function fetchGHGSummary(year) {
   try {
-    const response = await axios.get("/api/admin/trends");
-    const { emissions, sequestration, years } = response.data;
+    const response = await fetch(`${backendURL}/api/admin/ghg-summary?year=${year}`);
+    if (!response.ok) throw new Error("Failed to fetch data");
 
-    new Chart(document.getElementById("emissionsChart"), {
-      type: "line",
-      data: {
-        labels: years,
-        datasets: [{
-          label: "GHG Emissions",
-          data: emissions,
-          borderColor: "red",
-          fill: false,
-        }],
-      },
-    });
+    const data = await response.json();
 
-    new Chart(document.getElementById("sequestrationChart"), {
-      type: "line",
-      data: {
-        labels: years,
-        datasets: [{
-          label: "Carbon Sequestration",
-          data: sequestration,
-          borderColor: "green",
-          fill: false,
-        }],
-      },
-    });
-  } catch (error) {
-    console.error("Failed to load trend data", error);
+    renderTable(data);
+    renderKPIs(data);
+    updateGHGChart(data); // Update chart with new data
+
+  } catch (err) {
+    console.error(err);
+    showError("Failed to load GHG summary.");
   }
 }
 
-async function loadCompanyTable() {
-  const search = document.getElementById("companySearch").value;
-  const industry = document.getElementById("industryFilter").value;
+// Render summary table rows
+function renderTable(data) {
+  const tbody = document.getElementById("company-table-body");
+  tbody.innerHTML = "";
 
-  try {
-    const response = await axios.get("/api/admin/companies", {
-      params: { search, industry },
-    });
-
-    const tbody = document.getElementById("companyTableBody");
-    tbody.innerHTML = "";
-
-    response.data.forEach((c) => {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td class="border p-2">${c.name}</td>
-        <td class="border p-2">${c.industry}</td>
-        <td class="border p-2">${c.year}</td>
-        <td class="border p-2">${c.emission} TCO₂</td>
-        <td class="border p-2">${c.sequestration} TCO₂</td>
-        <td class="border p-2">${c.variance > 0 ? "+" : ""}${c.variance} TCO₂</td>
-        <td class="border p-2">${c.variance > 0 ? "🔴 High Emission" : "✅ Carbon Negative"}</td>
-      `;
-
-      tbody.appendChild(row);
-    });
-  } catch (error) {
-    console.error("Failed to load companies", error);
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-center p-4">No data available.</td></tr>`;
+    return;
   }
+
+  data.forEach((item) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="p-2 border company-name">${item.company_name}</td>
+      <td class="p-2 border">${item.year}</td>
+      <td class="p-2 border">${item.total_emissions.toFixed(2)} TCO₂</td>
+      <td class="p-2 border">${item.total_sequestration.toFixed(2)} TCO₂</td>
+      <td class="p-2 border">${item.net_variance.toFixed(2)} TCO₂</td>
+      <td class="p-2 border font-bold" style="color:${item.status_color}">${item.status}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  filterTable(); // apply search filter if any
+}
+
+// Render KPI summary values (aggregated)
+function renderKPIs(data) {
+  const totalEmissions = data.reduce((sum, item) => sum + item.total_emissions, 0);
+  const totalSequestration = data.reduce((sum, item) => sum + item.total_sequestration, 0);
+  const netVariance = totalSequestration - totalEmissions;
+  const nationalContribution = totalEmissions > 0 ? ((totalEmissions / 139500000) * 100).toFixed(4) : 0; // example divisor
+
+  document.getElementById("total_emissions").textContent = `${totalEmissions.toFixed(2)} TCO₂`;
+  document.getElementById("total_sequestration").textContent = `${totalSequestration.toFixed(2)} TCO₂`;
+  document.getElementById("net_variance").textContent = `${netVariance.toFixed(2)} TCO₂`;
+  document.getElementById("national_contribution_percent").textContent = `${nationalContribution}%`;
+}
+
+// Update the GHG Chart
+function updateGHGChart(data) {
+  const years = data.map(item => item.year);
+  const emissionsData = data.map(item => item.total_emissions);
+
+  if (!ghgChart) {
+    // Create the chart if it doesn't exist
+    const ctx = document.getElementById('ghgChart').getContext('2d');
+    ghgChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: years, // X-axis labels
+        datasets: [{
+          label: 'GHG Emissions (TCO₂)',
+          data: emissionsData, // GHG emissions data
+          backgroundColor: 'rgba(255, 99, 132, 0.2)', // Bar color
+          borderColor: 'rgba(255, 99, 132, 1)', // Border color
+          borderWidth: 1,
+        }]
+      },
+            options: {
+        responsive: true,
+        maintainAspectRatio: false, // allow height to follow container
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 50
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return `${tooltipItem.label}: ${tooltipItem.raw} TCO₂`;
+              }
+            }
+          }
+        }
+      }
+
+    });
+  } else {
+    // Update the existing chart with new data
+    ghgChart.data.labels = years;
+    ghgChart.data.datasets[0].data = emissionsData;
+    ghgChart.update();
+  }
+}
+
+// Filter company table by name
+function filterTable() {
+  const input = document.getElementById("companySearch").value.toLowerCase();
+  const rows = document.querySelectorAll("#company-table-body tr");
+
+  rows.forEach((row) => {
+    const company = row.querySelector(".company-name")?.textContent.toLowerCase() || "";
+    row.style.display = company.includes(input) ? "" : "none";
+  });
+}
+
+// Error message utility
+function showError(msg) {
+  const alertBox = document.querySelector(".alert-danger");
+  alertBox.textContent = msg;
+  alertBox.classList.remove("d-none");
+  setTimeout(() => alertBox.classList.add("d-none"), 4000);
 }
