@@ -1,23 +1,27 @@
 import { backendURL, successNotification, errorNotification } from "../utils/utils.js";
 
-// Handle Logout
-const btn_logout = document.getElementById("btn_logout");
-btn_logout.onclick = async () => {
-    const response = await fetch(`${backendURL}/api/logout`, {
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    const btn_logout = document.getElementById("btn_logout");
+    if (btn_logout) {
+        btn_logout.onclick = async () => {
+            const response = await fetch(`${backendURL}/api/logout`, {
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+            });
 
-    if (response.ok) {
-        localStorage.clear();
-        window.location.pathname = "/login.html";
-    } else {
-        const json = await response.json();
-        errorNotification(json.message, 10);
+            if (response.ok) {
+                localStorage.clear();
+                window.location.pathname = "/login.html";
+            } else {
+                const json = await response.json();
+                errorNotification(json.message, 10);
+            }
+        };
     }
-};
+});
+
 
 // Display Logged-In User
 async function getLoggedUser() {
@@ -239,17 +243,29 @@ async function loadTreeMapMarkers(map) {
 }
 
 function initializeTreeMap() {
-    map = L.map('map').setView([8.947340, 125.534190], 13);
+  const mapContainer = document.getElementById("treeMap");
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+  if (!mapContainer) {
+    console.warn("Map container #treeMap not found. Skipping map initialization.");
+    return;
+  }
 
-    loadTreeMapMarkers(map);
+  const map = L.map("treeMap").setView([9.0, 125.5], 7);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; OpenStreetMap contributors',
+  }).addTo(map);
+
+  loadTreeMapMarkers(map); // ✅ Corrected
 }
+
+
+
+
 
 // On Dashboard Page Load
 if (document.body.dataset.page === "dashboard") {
     getDashboardData();
     initializeTreeMap();
+    
 }

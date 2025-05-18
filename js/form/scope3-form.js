@@ -30,75 +30,88 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     formScope3Travel.addEventListener('submit', async function (e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        const token = localStorage.getItem('token');
-        if (!token) {
-            errorNotification("No authentication token found.", 5);
-            return;
+    const token = localStorage.getItem('token');
+    if (!token) {
+        errorNotification("No authentication token found.", 5);
+        return;
+    }
+
+    // Extract values
+    const year = +document.getElementById("year").value;
+    const mode = modeSelect.value;
+    const month = mode === "monthly" ? document.getElementById("month").value : null;
+    const quarter = mode === "quarterly" ? document.getElementById("quarter").value : null;
+    const travel_type = document.getElementById("travel_type").value;
+    const travel_distance_miles = parseFloat(document.getElementById("travel_distance_miles").value);
+
+    const co2_emission_factor = parseFloat(document.getElementById("co2_emission_factor").value);
+    const ch4_emission_factor = parseFloat(document.getElementById("ch4_emission_factor").value);
+    const n2o_emission_factor = parseFloat(document.getElementById("n2o_emission_factor").value);
+
+    const co2_gwp = parseFloat(document.getElementById("_co2_gwp").value);
+    const ch4_gwp = parseFloat(document.getElementById("ch4_gwp").value);
+    const n2o_gwp = parseFloat(document.getElementById("n2o_gwp").value);
+
+    // Validation
+    if (
+        [co2_emission_factor, ch4_emission_factor, n2o_emission_factor, co2_gwp, ch4_gwp, n2o_gwp]
+            .some(val => isNaN(val))
+    ) {
+        errorNotification("Please fill in all emission factors and GWP values correctly.", 5);
+        return;
+    }
+
+    // Compute emissions per gas (kg → metric tons)
+    const co2_emissions = (travel_distance_miles * co2_emission_factor * co2_gwp);
+    const ch4_emissions = (travel_distance_miles * ch4_emission_factor * ch4_gwp);
+    const n2o_emissions = (travel_distance_miles * n2o_emission_factor * n2o_gwp);
+
+    const total_emissions = co2_emissions + ch4_emissions + n2o_emissions;
+
+    try {
+        const res = await fetch(`${backendURL}/api/ghg-emission/travel`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                year,
+                mode,
+                month,
+                quarter,
+                travel_type,
+                travel_distance_miles,
+                co2_emission_factor,
+                ch4_emission_factor,
+                n2o_emission_factor,
+                co2_gwp,
+                ch4_gwp,
+                n2o_gwp,
+                co2_emissions,
+                ch4_emissions,
+                n2o_emissions,
+                total_emissions
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || "Failed to submit travel emission.");
         }
 
-        // Extract values
-        const year = +document.getElementById("year").value;
-        const mode = modeSelect.value;
-        const month = mode === "monthly" ? document.getElementById("month").value : null;
-        const quarter = mode === "quarterly" ? document.getElementById("quarter").value : null;
-        const travel_type = document.getElementById("travel_type").value;
-        const travel_distance_miles = parseFloat(document.getElementById("travel_distance_miles").value);
-        const emission_factor = parseFloat(document.getElementById("emission_factor").value);
-        const gas_type = document.getElementById("gas_type").value;
-        const userGWP = parseFloat(document.getElementById("gwp").value);
+        successNotification("Business Travel Emission Recorded");
+        formScope3Travel.reset();
+        toggleModeFields(); // Reset month/quarter display
+        setTimeout(() => window.location.href = "/scope3-table.html", 3000);
 
-        // Validation
-        if (!gas_type) {
-            errorNotification("Please select a gas type.", 5);
-            return;
-        }
+    } catch (err) {
+        console.error("Travel Scope Error:", err);
+        errorNotification(err.message || "Failed to submit travel emission.", 5);
+    }
+});
 
-        if (isNaN(userGWP)) {
-            errorNotification("Please enter a valid GWP value.", 5);
-            return;
-        }
-
-        // Compute total emissions (kg → metric tons)
-        const emissions_kg = travel_distance_miles * emission_factor * userGWP;
-        const total_emissions = emissions_kg / 1000;
-
-        try {
-            const res = await fetch(`${backendURL}/api/ghg-emission/travel`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    year,
-                    mode,
-                    month,
-                    quarter,
-                    travel_type,
-                    travel_distance_miles,
-                    emission_factor,
-                    gas_type,
-                    gwp: userGWP,
-                    total_emissions
-                })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.message || "Failed to submit travel emission.");
-            }
-
-            successNotification("Business Travel Emission Recorded");
-            formScope3Travel.reset();
-            toggleModeFields(); // Reset month/quarter display
-            setTimeout(() => window.location.href = "/scope3-table.html", 3000);
-
-        } catch (err) {
-            console.error("Travel Scope Error:", err);
-            errorNotification(err.message || "Failed to submit travel emission.", 5);
-        }
-    });
 });

@@ -94,39 +94,41 @@
         <!-- Main Content -->
         <div id="layoutSidenav_content">
             <main>
-                <div class="container mt-5" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px; max-width: fit-content; margin: 0 auto;">
-                    <h2 class="text-center mb-4">Plantation Form</h2>
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 col-lg-6 mb-4" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; border-radius: 12px;">
+                            <h2 class="text-center mb-2">Plantation Form</h2>
 
-                    <!-- Notifications -->
-                    <div class="alert alert-success d-none" role="alert" id="successAlert"></div>
-                    <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
+                            <!-- Notifications -->
+                            <div class="alert alert-success d-none" role="alert" id="successAlert"></div>
+                            <div class="alert alert-danger d-none" role="alert" id="errorAlert"></div>
 
-                    <form id="form_plantation" enctype="multipart/form-data" method="POST">
+                            <form id="form_plantation" enctype="multipart/form-data" method="POST">
 
-                            <label for="form-label " style="font-weight:600; font-size: large;">
-                                Area Planted (Hectares)
-                            </label>
-                            <input class="form-control mb-4 mt-2" type="text" placeholder="Area Planted (Hectares)" aria-label="area_planted" step="0.01" id = "area_planted" name="area_planted" required>
+                                <label for="area_planted" style="font-weight:600; font-size: large;">
+                                    Area Planted (Hectares)
+                                </label>
+                                <input class="form-control mb-4 mt-2" type="number" placeholder="Area Planted (Hectares)" aria-label="area_planted" step="0.01" id="area_planted" name="area_planted" required>
 
-                            <label for="form-label " style="font-weight:600; font-size: large;">
-                                Seedlings Planted
-                            </label>
-                            <input class="form-control mb-4 mt-2" type="text" placeholder="Seedlings Planted" aria-label="seedlings_planted"  id = "seedlings_planted" name="seedlings_planted" required>
-                
-                            <label for="form-label " style="font-weight:600; font-size: large;">
-                                Age of Plantation
-                            </label>
-                            <input class="form-control mb-4 mt-2" type="text" placeholder="Age of Plantation" aria-label="plantation_age" id = "plantation_age" name="plantation_age" required>
+                                <label for="seedlings_planted" style="font-weight:600; font-size: large;">
+                                    Seedlings Planted
+                                </label>
+                                <input class="form-control mb-4 mt-2" type="number" placeholder="Seedlings Planted" aria-label="seedlings_planted" id="seedlings_planted" name="seedlings_planted" required>
+                    
+                                <label for="plantation_age" style="font-weight:600; font-size: large;">
+                                    Age of Plantation
+                                </label>
+                                <input class="form-control mb-4 mt-2" type="number" placeholder="Age of Plantation" aria-label="plantation_age" id="plantation_age" name="plantation_age" required>
 
-                            
-                                <label for="form-label " style="font-weight:600; font-size:medium;">
-                                  Date Recorded
-                              </label>
+                                <label for="date_recorded" style="font-weight:600; font-size:medium;">
+                                    Date Recorded
+                                </label>
                                 <input class="form-control mt-2 mb-4" type="date" placeholder="Date Recorded" id="date_recorded" name="date_recorded" required>
-                             
-                
-                            <button type="submit" class="custom-button">Save</button>
-                        </form>
+                                
+                                <button type="submit" class="custom-button w-100 px-4">Save</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </main>
 

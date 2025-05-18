@@ -1,87 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin - Company GHG Summary</title>
-    <script type="module" src="js/admin.dasboard/admin-dashboard.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Admin dashboard for GHG monitoring" />
+    <meta name="author" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>Admin - Dashboard</title>
+
+    <!-- Styles -->
+    <link href="css/styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+    <!-- Icons and Scripts -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" defer/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer></script>
+
+    <!-- Custom Scripts -->
+    <script type="module" src="js/admin.dasboard/admin-dashboard.js" defer></script>
+
+    <script src="js/utils/script.js"></script>
+
+    <style>
+  #ghgChart {
+    width: 100% !important;
+    height: 300px !important; /* or whatever height fits */
+  }
+</style>
+
+
 </head>
-<body class="bg-gray-100 text-gray-800">
 
-    <div class="container mx-auto px-4 py-6">
+<body class="sb-nav-fixed" data-page="dashboard">
+    <!-- Top Navigation -->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.html">GreenGauge</a>
+        <button class="btn btn-link btn-sm me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
 
-      <div class="mb-4">
-    <!-- Example Button: Go to User Page -->
-    <a href="index.html" class="bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 inline-block text-center">
-        Go to User Page
-    </a>
-</div>
+        <ul class="navbar-nav ms-auto me-3 me-lg-4 pe-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" id="btn_logout" type="button">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 
-    <h1 class="text-3xl font-bold mb-6">Company Summary Dashboard</h1>
+    <!-- Sidebar and Main -->
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
 
-    <!-- Notifications -->
-    <div class="alert alert-success d-none mt-3" role="alert"></div>
-    <div class="alert alert-danger d-none mt-3" role="alert"></div>
+                        <div class="sb-sidenav-menu-heading">Form</div>
+                        <a class="nav-link" href="company-form.html">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-clipboard"></i></div>
+                            Company
+                        </a>
+                        <a class="nav-link" href="/ghg-form.html">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-cloud"></i></div>
+                            Ghg Emission
+                        </a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTree"
+                            aria-expanded="false" aria-controls="collapseTree">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
+                            Tree
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseTree" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/plantation-form.html"><i class="fa-solid fa-mountain-sun me-2"></i>Plantation</a>
+                                <a class="nav-link" href="/tree-growth.html"><i class="fa-solid fa-spa me-2"></i>Tree Data</a>
+                            </nav>
+                        </div>
 
-    <!-- Year Selection -->
-    <div class="mb-4 flex items-center gap-4">
-        <label for="yearSelect" class="font-medium">Select Year:</label>
-        <select id="yearSelect" class="border px-2 py-1 rounded bg-white shadow">
-            <option value="">Loading...</option>
-        </select>
+                        <div class="sb-sidenav-menu-heading">Inventory</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGHG"
+                            aria-expanded="false" aria-controls="collapseGHG">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
+                            GHG Emission
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseGHG" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/scope1-table.html"><i class="fa-solid fa-mountain-sun me-2"></i>Scope 1</a>
+                                <a class="nav-link" href="/scope2-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 2</a>
+                                <a class="nav-link" href="/scope3-table.html"><i class="fa-solid fa-spa me-2"></i>Scope 3</a>
+                                <a class="nav-link" href="/summary-table.html"><i class="fa-solid fa-spa me-2"></i>Summary</a>
+                            </nav>
+                        </div>
 
-        <input type="text" id="companySearch" placeholder="Search company..." class="border px-2 py-1 rounded ml-auto w-64" />
+                        <a class="nav-link" href="carbon-seq.html">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-leaf"></i></div>
+                            Carbon Sequestration
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    <span id="user_logged"></span>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4 mb-4">
+                    <h1 class="mt-4 text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+
+                    <div class="mb-4">
+                        <a href="index.html">
+                            <button class="bg-green-500 text-black px-2 py-1 text-sm rounded shadow hover:bg-blue-600">
+                                Go to User Page
+                            </button>
+                        </a>
+                    </div>
+
+                    <!-- Alert Notifications -->
+                    <div class="alert alert-success d-none mt-3" role="alert"></div>
+                    <div class="alert alert-danger d-none mt-3" role="alert"></div>
+
+                    <!-- Carbon Summary Section -->
+                    <div class="bg-white p-6 rounded-xl shadow mb-8 mt-4">
+                        <h2 id="carbonStatus" class="text-lg font-semibold mb-4 text-center"></h2>
+
+                        <!-- Year Selection -->
+                        <div class="mb-4 flex items-center gap-4">
+                            <label for="yearSelect" class="font-medium">Select Year:</label>
+                            <select id="yearSelect" class="border px-2 py-1 rounded bg-white shadow">
+                                <option value="">Loading...</option>
+                            </select>
+
+                            <input type="text" id="companySearch" placeholder="Search company..."
+                                class="border px-2 py-1 rounded ml-auto w-64" />
+                        </div>
+
+                        <!-- KPIs -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+                            <div class="bg-white shadow p-4 rounded text-red-600">
+                                <p class="text-gray-500">Total Emissions</p>
+                                <h2 id="total_emissions" class="text-xl font-bold">0 TCO₂</h2>
+                            </div>
+                            <div class="bg-white shadow p-4 rounded">
+                                <p class="text-gray-500">Total Sequestration</p>
+                                <h2 id="total_sequestration" class="text-xl font-bold">0 TCO₂</h2>
+                            </div>
+                            <div class="bg-white shadow p-4 rounded">
+                                <p class="text-gray-500">Net Variance</p>
+                                <h2 id="net_variance" class="text-xl font-bold">0 TCO₂</h2>
+                            </div>
+                            <div class="bg-white shadow p-4 rounded">
+                                <p class="text-gray-500">National Contribution</p>
+                                <h2 id="national_contribution_percent" class="text-xl font-bold">0%</h2>
+                            </div>
+                        </div>
+
+                        <!-- Chart -->
+                        <!-- Wrap the chart in a div with more spacing -->
+                        <div class="bg-white shadow p-4 rounded-lg mb-12">
+                            <h2 class="text-lg font-semibold mb-2">GHG Emissions Over Time</h2>
+                            <div class="relative w-full h-64">
+                                <canvas id="ghgChart"></canvas>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Table -->
+                        <div class="overflow-auto">
+                            <table class="min-w-full bg-white rounded shadow">
+                                <thead class="bg-gray-200 text-left">
+                                    <tr>
+                                        <th class="p-2 border">Company</th>
+                                        <th class="p-2 border">Year</th>
+                                        <th class="p-2 border">Emissions</th>
+                                        <th class="p-2 border">Sequestration</th>
+                                        <th class="p-2 border">Net Variance</th>
+                                        <th class="p-2 border">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="company-table-body">
+                                    <tr><td colspan="6" class="text-center p-4">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="py-4 bg-light mt-auto" style="position:relative;">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; GreenGauge 2025</div>
+                            
+                        </div>
+                    </div>
+                </footer>
+        </div>
     </div>
-
-    <!-- KPIs -->
-    <div class="grid grid-cols-4 gap-4 mb-6">
-        <div class="bg-white shadow p-4 rounded text-danger">
-            <p class="text-gray-500">Total Emissions</p>
-            <h2 id="total_emissions" class="text-xl font-bold">0 TCO₂</h2>
-        </div>
-        <div class="bg-white shadow p-4 rounded">
-            <p class="text-gray-500">Total Sequestration</p>
-            <h2 id="total_sequestration" class="text-xl font-bold">0 TCO₂</h2>
-        </div>
-        <div class="bg-white shadow p-4 rounded">
-            <p class="text-gray-500">Net Variance</p>
-            <h2 id="net_variance" class="text-xl font-bold">0 TCO₂</h2>
-        </div>
-        <div class="bg-white shadow p-4 rounded">
-            <p class="text-gray-500">National Contribution</p>
-            <h2 id="national_contribution_percent" class="text-xl font-bold">0%</h2>
-        </div>
-    </div>
-
-    <!-- Graph Section -->
-    <div class="bg-white shadow p-4 rounded-lg mb-6">
-  <h2 class="text-lg font-semibold mb-2">GHG Emissions Over Time</h2>
-  <div class="relative w-full max-w-md h-64 mx-auto"> <!-- max-w-md = ~28rem wide -->
-    <canvas id="ghgChart"></canvas>
-  </div>
-</div>
-
-
-    <!-- Table -->
-    <div class="overflow-auto">
-        <table class="min-w-full bg-white rounded shadow">
-            <thead class="bg-gray-200 text-left">
-                <tr>
-                    <th class="p-2 border">Company</th>
-                    <th class="p-2 border">Year</th>
-                    <th class="p-2 border">Emissions</th>
-                    <th class="p-2 border">Sequestration</th>
-                    <th class="p-2 border">Net Variance</th>
-                    <th class="p-2 border">Status</th>
-                </tr>
-            </thead>
-            <tbody id="company-table-body">
-                <tr><td colspan="6" class="text-center p-4">Loading...</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
 </body>
 </html>

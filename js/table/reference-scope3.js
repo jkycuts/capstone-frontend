@@ -1,5 +1,11 @@
 import { backendURL, errorNotification } from '../utils/utils.js';
 
+// Helper to safely display values or fallback
+function safeDisplay(value, fallback = '-') {
+    if (value === null || value === undefined || value === '') return fallback;
+    return value;
+}
+
 function capitalizeFirstLetter(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -74,25 +80,25 @@ function renderScope3Table(data) {
         return;
     }
 
-    let totalCO2 = 0;
-    let totalCH4 = 0;
-    let totalN2O = 0;
-    let totalCombined = 0;
+    let totalCO2 = 0, totalCH4 = 0, totalN2O = 0, totalCombined = 0;
 
     data.forEach((record, index) => {
-        const emissions = record.emissions || {};
-        const co2 = parseFloat(emissions.co2?.value ?? 0);
-        const ch4 = parseFloat(emissions.ch4?.value ?? 0);
-        const n2o = parseFloat(emissions.n2o?.value ?? 0);
+        const emissions = record.emissions_kg || {};
+        const co2 = parseFloat(emissions.co2 ?? 0) || 0;
+        const ch4 = parseFloat(emissions.ch4 ?? 0) || 0;
+        const n2o = parseFloat(emissions.n2o ?? 0) || 0;
         const emission_tco2e = co2 + ch4 + n2o;
+
+        const emissionFactors = record.emission_factors || {};
+        const gwp = record.gwp || {};
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${record.year ?? '-'}</td>
-            <td>${capitalizeFirstLetter(record.category ?? '')}</td>
-            <td>${record.quarter ?? '-'}</td>
-            <td>${record.month ?? '-'}</td>
-            <td>${parseFloat(record.total_distance ?? 0).toFixed(2)}</td>
+            <td>${safeDisplay(record.year)}</td>
+            <td>${capitalizeFirstLetter(safeDisplay(record.travel_type))}</td>
+            <td>${safeDisplay(record.quarter)}</td>
+            <td>${safeDisplay(record.month)}</td>
+            <td>${parseFloat(record.total_distance_miles ?? 0).toFixed(2)}</td>
             <td>${co2.toFixed(2)}</td>
             <td>${ch4.toFixed(2)}</td>
             <td>${n2o.toFixed(2)}</td>
@@ -112,14 +118,14 @@ function renderScope3Table(data) {
             <td colspan="10">
                 <div class="bg-gray-50 p-4 rounded shadow text-sm">
                     <strong>Emission Factors:</strong><br>
-                    CO₂: <span class="font-normal">${emissions.co2?.emission_factor ?? 'N/A'}</span> |
-                    CH₄: <span class="font-normal">${emissions.ch4?.emission_factor ?? 'N/A'}</span> |
-                    N₂O: <span class="font-normal">${emissions.n2o?.emission_factor ?? 'N/A'}</span><br><br>
+                    CO₂: <span class="font-normal">${safeDisplay(emissionFactors.co2, 'N/A')}</span> |
+                    CH₄: <span class="font-normal">${safeDisplay(emissionFactors.ch4, 'N/A')}</span> |
+                    N₂O: <span class="font-normal">${safeDisplay(emissionFactors.n2o, 'N/A')}</span><br><br>
 
                     <strong>Global Warming Potentials (GWP):</strong><br>
-                    CO₂: <span class="font-normal">${emissions.co2?.gwp ?? 'N/A'}</span> |
-                    CH₄: <span class="font-normal">${emissions.ch4?.gwp ?? 'N/A'}</span> |
-                    N₂O: <span class="font-normal">${emissions.n2o?.gwp ?? 'N/A'}</span>
+                    CO₂: <span class="font-normal">${safeDisplay(gwp.co2, 'N/A')}</span> |
+                    CH₄: <span class="font-normal">${safeDisplay(gwp.ch4, 'N/A')}</span> |
+                    N₂O: <span class="font-normal">${safeDisplay(gwp.n2o, 'N/A')}</span>
                 </div>
             </td>
         `;
@@ -151,7 +157,7 @@ function renderScope3Table(data) {
 
             const isHidden = detailsRow.classList.contains('hidden');
 
-            // Hide all
+            // Hide all details rows and reset buttons
             document.querySelectorAll('tr[id^="details-"]').forEach(row => row.classList.add('hidden'));
             document.querySelectorAll('.toggle-btn').forEach(btn => btn.textContent = 'Show Details');
 

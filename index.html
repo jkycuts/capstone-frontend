@@ -228,7 +228,7 @@
                             </div>
                     
                             <!-- Map Container -->
-                            <div id="map" class="rounded-xl mt-4" style="height: 400px; "></div>
+                            <div id="treeMap" class="rounded-xl mt-4" style="height: 400px; "></div>
 
                              <!-- Tree Growth Progress Table -->
         
@@ -255,15 +255,18 @@
         <!-- <script type="module" src="/js/summary-table.js"></script> -->
 
         <script>
-                    window.addEventListener('DOMContentLoaded', (event) => {
+            window.addEventListener('DOMContentLoaded', (event) => {
             const role = localStorage.getItem("role");
 
-            // Optionally show admin-specific features in the regular user page
             if (role === "super_admin") {
-                // Optionally add admin features like a sidebar or links
-                document.getElementById("admin-feature").classList.remove("hidden");
+                const adminFeatureElem = document.getElementById("admin-feature");
+                if (adminFeatureElem) {
+                    adminFeatureElem.classList.remove("hidden");
+                } 
+                // else silently do nothing or optionally log a warning
             }
         });
+
         </script>
     </body>  
 </html>

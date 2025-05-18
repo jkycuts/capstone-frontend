@@ -7,9 +7,11 @@ async function loadGHGSummaryTable() {
     if (!token) return errorNotification("No token found.", 5);
 
     const endpoints = [
-        { label: "Fuel Consumption", url: "/api/ghg-emission/fuel/details" },             // Scope 1
-        { label: "Electricity",      url: "/api/ghg-emission/electricity/details" },     // Scope 2
-        { label: "Business Travel",  url: "/api/ghg-emission/travel/details" }          // Scope 3
+        { label: "Fuel Consumption", url: "/api/ghg-emission/fuel/details" },            // Scope 1
+        { label: "Electricity", url: "/api/ghg-emission/electricity/details" },          // Scope 2
+        { label: "Business Travel", url: "/api/ghg-emission/travel/details" },           // Scope 3
+        
+        // Add more if your backend supports it
     ];
 
     const yearSet = new Set();
@@ -20,12 +22,11 @@ async function loadGHGSummaryTable() {
             const res = await fetch(`${backendURL}${url}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
+
             if (!res.ok) throw new Error(`Failed to load ${label} data`);
 
-             
-
             const records = await res.json();
-            console.log(`${label} records:`, records); // ✅ Debug here
+            console.log(`${label} records:`, records);
 
             if (!Array.isArray(records)) continue;
 
@@ -45,7 +46,7 @@ async function loadGHGSummaryTable() {
         }
     }
 
-    const years = [...yearSet].sort(); // Sorted list of all years
+    const years = [...yearSet].sort();
     const tableHead = document.getElementById('summary_table_head');
     const tableBody = document.getElementById('summary_table_body');
     const tableFoot = document.getElementById('summary_table_foot');
@@ -88,8 +89,7 @@ async function loadGHGSummaryTable() {
     }
     footerRow += `<th id="overall_total">${grandTotal.toFixed(3)}</th></tr>`;
     tableFoot.innerHTML = footerRow;
+
+    // 🧪 Log for comparison
+    console.log("🟩 Summary table total emission (frontend):", grandTotal.toFixed(3));
 }
-
-document.addEventListener('DOMContentLoaded', loadGHGSummaryTable);
-
-

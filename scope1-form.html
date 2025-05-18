@@ -118,108 +118,116 @@
                     <div class="alert alert-danger d-none" role="alert"></div>
 
                     <form id="form_scope1_fuel">
-                      <div class="row">
-                        <!-- Year -->
-                        <div class="col-md-6 mb-3">
-                          <label for="year" class="form-label">Year</label>
-                          <input class="form-control" type="number" id="year" placeholder="Year" required>
-                        </div>
-                    
-                        <!-- Mode Selection -->
-                        <div class="col-md-6 mb-3">
-                          <label for="mode" class="form-label">Data Mode</label>
-                          <select class="form-control" id="mode" required>
-                            <option value="">Select Mode</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="quarterly">Quarterly</option>
-                          </select>
-                        </div>
-                    
-                        <!-- Quarter (shown only when mode is 'quarterly') -->
-                        <div class="col-md-6 mb-3" id="quarter-container" style="display: none;">
-                          <label for="quarter" class="form-label" id="quarterLabel">Quarter</label>
-                          <select class="form-control" id="quarter">
-                            <option value="">Select Quarter</option>
-                            <option value="Q1">Q1</option>
-                            <option value="Q2">Q2</option>
-                            <option value="Q3">Q3</option>
-                            <option value="Q4">Q4</option>
-                          </select>
-                        </div>
-                    
-                        <!-- Month (shown only when mode is 'monthly') -->
-                        <div class="col-md-6 mb-3" id="month-container" style="display: none;">
-                          <label for="month" class="form-label" id="monthLabel">Month</label>
-                          <select class="form-control" id="month">
-                            <option value="">Select Month</option>
-                            <option value="January">January</option>
-                            <option value="February">February</option>
-                            <option value="March">March</option>
-                            <option value="April">April</option>
-                            <option value="May">May</option>
-                            <option value="June">June</option>
-                            <option value="July">July</option>
-                            <option value="August">August</option>
-                            <option value="September">September</option>
-                            <option value="October">October</option>
-                            <option value="November">November</option>
-                            <option value="December">December</option>
-                          </select>
-                        </div>
-                    
-                        
-                       <!-- Parameter (Dropdown) -->
-                      <div class="col-md-6 mb-3">
-                        <label for="parameter" class="form-label" style="font-weight:600; font-size: large;">Parameter</label>
-                        <select class="form-control" id="parameter" required>
-                          <option value="">Select Parameter</option>
-                          <option value="transportation">Transportation</option>
-                          <option value="production">Production</option>
-                          <option value="electric generation">Electric Generation</option>
-                        </select>
-                      </div>
+  <div class="row">
+    <!-- Year -->
+    <div class="col-md-6 mb-3">
+      <label for="year" class="form-label">Year</label>
+      <input class="form-control" type="number" id="year" placeholder="Year" required>
+    </div>
 
-                    
-                        <!-- Fuel Type -->
-                        <div class="col-md-6 mb-3">
-                          <label for="fuel_type" class="form-label">Fuel Type</label>
-                          <input class="form-control" type="text" id="fuel_type" placeholder="Enter Fuel Type" required>
-                        </div>
-                    
-                        <!-- Fuel Liters Used -->
-                        <div class="col-md-6 mb-3">
-                          <label for="fuel_liters_used" class="form-label">Fuel Used (Liters)</label>
-                          <input class="form-control" type="number" id="fuel_liters_used" step="0.01" placeholder="Enter liters" required>
-                        </div>
+    <!-- Mode -->
+    <div class="col-md-6 mb-3">
+      <label for="mode" class="form-label">Data Mode</label>
+      <select class="form-control" id="mode" required>
+        <option value="">Select Mode</option>
+        <option value="monthly">Monthly</option>
+        <option value="quarterly">Quarterly</option>
+      </select>
+    </div>
 
-                        <div class="col-md-6 mb-3">
-                          <label for="gas_type" class="form-label" id="gas_type">Gas Type</label>
-                          <select class="form-control" id="gas_type">
-                            <option value="">Enter Gas</option>
-                            <option value="co2">CO₂</option>
-                            <option value="ch4">CH₄</option>
-                            <option value="n2o">N₂O</option>
-                          </select>
-                        </div>
+    <!-- Quarter -->
+    <div class="col-md-6 mb-3" id="quarter-container" style="display: none;">
+      <label for="quarter" class="form-label">Quarter</label>
+      <select class="form-control" id="quarter">
+        <option value="">Select Quarter</option>
+        <option value="Q1">Q1</option>
+        <option value="Q2">Q2</option>
+        <option value="Q3">Q3</option>
+        <option value="Q4">Q4</option>
+      </select>
+    </div>
 
-                        <!-- Emission Factor CO2 -->
-                        <div class="col-md-6 mb-3">
-                          <label for="emission_factor" class="form-label">Emission Factor</label>
-                          <input class="form-control" type="number" id="emission_factor" step="0.000001" placeholder="Enter Emission Factor" required>
-                        </div>
+    <!-- Month -->
+    <div class="col-md-6 mb-3" id="month-container" style="display: none;">
+      <label for="month" class="form-label">Month</label>
+      <select class="form-control" id="month">
+        <option value="">Select Month</option>
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+      </select>
+    </div>
 
-                        <!-- GWP -->
-                        <div class="col-md-6 mb-3">
-                          <label for="gwp" class="form-label">Global Warming Potential (GWP)</label>
-                          <input class="form-control" type="number" id="gwp" step="0.01" placeholder="Enter GWP Value" required>
-                        </div>
+    <!-- Parameter -->
+    <div class="col-md-6 mb-3">
+      <label for="parameter" class="form-label">Parameter</label>
+      <select class="form-control" id="parameter" required>
+        <option value="">Select Parameter</option>
+        <option value="transportation">Transportation</option>
+        <option value="production">Production</option>
+        <option value="electric_generation">Electric Generation</option>
+      </select>
+    </div>
 
-                      </div>
-                    
-                      <div class="text-center mt-4">
-                        <button type="submit" class="custom-button">Save</button>
-                      </div>
-                    </form>
+    <!-- Fuel Type -->
+    <div class="col-md-6 mb-3">
+      <label for="fuel_type" class="form-label">Fuel Type</label>
+      <input class="form-control" type="text" id="fuel_type" placeholder="Enter Fuel Type" required>
+    </div>
+
+    <!-- Fuel Liters Used -->
+    <div class="col-md-6 mb-3">
+      <label for="fuel_liters_used" class="form-label">Fuel Used (Liters)</label>
+      <input class="form-control" type="number" id="fuel_liters_used" step="0.01" placeholder="Enter Liters" required>
+    </div>
+
+    <!-- Emission Factors -->
+    <div class="col-md-6 mb-3">
+      <label for="co2_emission_factor" class="form-label">Emission Factor CO₂</label>
+      <input class="form-control" type="number" id="co2_emission_factor" step="0.000001" placeholder="kg/L" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="ch4_emission_factor" class="form-label">Emission Factor CH₄</label>
+      <input class="form-control" type="number" id="ch4_emission_factor" step="0.000001" placeholder="kg/L" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="n2o_emission_factor" class="form-label">Emission Factor N₂O</label>
+      <input class="form-control" type="number" id="n2o_emission_factor" step="0.000001" placeholder="kg/L" required>
+    </div>
+
+    <!-- GWP values -->
+    <div class="col-md-6 mb-3">
+      <label for="co2_gwp" class="form-label">GWP CO₂</label>
+      <input class="form-control" type="number" id="co2_gwp" step="0.01" placeholder="Enter GWP Value" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="ch4_gwp" class="form-label">GWP CH₄</label>
+      <input class="form-control" type="number" id="ch4_gwp" step="0.01" placeholder="Enter GWP Value" required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="n2o_gwp" class="form-label">GWP N₂O</label>
+      <input class="form-control" type="number" id="n2o_gwp" step="0.01" placeholder="Enter GWP Value" required>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button type="submit" class="custom-button">Save</button>
+  </div>
+</form>
+
                     
                     
                   </div>

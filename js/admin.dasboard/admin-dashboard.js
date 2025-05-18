@@ -4,11 +4,21 @@ let ghgChart; // Declare chart globally to update it later
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchYears();
-});
 
- document.getElementById("goToUserPage").addEventListener("click", function() {
-        window.location.href = "/user-page"; // Redirect to the user page
+  const userPageBtn = document.getElementById("goToUserPage");
+  if (userPageBtn) {
+    userPageBtn.addEventListener("click", function () {
+      window.location.href = "/user-page";
     });
+  }
+
+  const companySearchInput = document.getElementById("companySearch");
+  if (companySearchInput) {
+    companySearchInput.addEventListener("input", () => {
+      filterTable();
+    });
+  }
+});
 
 // Fetch available years for the dropdown
 async function fetchYears() {
@@ -18,6 +28,8 @@ async function fetchYears() {
 
     const years = await response.json();
     const yearSelect = document.getElementById("yearSelect");
+
+    if (!yearSelect) return;
 
     yearSelect.innerHTML = ""; // clear loading option
 
@@ -37,10 +49,6 @@ async function fetchYears() {
     yearSelect.addEventListener("change", (e) => {
       const selectedYear = e.target.value;
       fetchGHGSummary(selectedYear);
-    });
-
-    document.getElementById("companySearch").addEventListener("input", () => {
-      filterTable();
     });
 
   } catch (err) {
@@ -70,6 +78,8 @@ async function fetchGHGSummary(year) {
 // Render summary table rows
 function renderTable(data) {
   const tbody = document.getElementById("company-table-body");
+  if (!tbody) return;
+
   tbody.innerHTML = "";
 
   if (!data || data.length === 0) {
@@ -98,37 +108,46 @@ function renderKPIs(data) {
   const totalEmissions = data.reduce((sum, item) => sum + item.total_emissions, 0);
   const totalSequestration = data.reduce((sum, item) => sum + item.total_sequestration, 0);
   const netVariance = totalSequestration - totalEmissions;
-  const nationalContribution = totalEmissions > 0 ? ((totalEmissions / 139500000) * 100).toFixed(4) : 0; // example divisor
+  const nationalContribution = totalEmissions > 0 ? ((totalEmissions / 139500000) * 100).toFixed(4) : 0;
 
-  document.getElementById("total_emissions").textContent = `${totalEmissions.toFixed(2)} TCO₂`;
-  document.getElementById("total_sequestration").textContent = `${totalSequestration.toFixed(2)} TCO₂`;
-  document.getElementById("net_variance").textContent = `${netVariance.toFixed(2)} TCO₂`;
-  document.getElementById("national_contribution_percent").textContent = `${nationalContribution}%`;
+  safeSetText("total_emissions", `${totalEmissions.toFixed(2)} TCO₂`);
+  safeSetText("total_sequestration", `${totalSequestration.toFixed(2)} TCO₂`);
+  safeSetText("net_variance", `${netVariance.toFixed(2)} TCO₂`);
+  safeSetText("national_contribution_percent", `${nationalContribution}%`);
+}
+
+// Safe way to set text content only if the element exists
+function safeSetText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
 }
 
 // Update the GHG Chart
 function updateGHGChart(data) {
+  const canvas = document.getElementById("ghgChart");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
   const years = data.map(item => item.year);
   const emissionsData = data.map(item => item.total_emissions);
 
   if (!ghgChart) {
     // Create the chart if it doesn't exist
-    const ctx = document.getElementById('ghgChart').getContext('2d');
     ghgChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: years, // X-axis labels
+        labels: years,
         datasets: [{
           label: 'GHG Emissions (TCO₂)',
-          data: emissionsData, // GHG emissions data
-          backgroundColor: 'rgba(255, 99, 132, 0.2)', // Bar color
-          borderColor: 'rgba(255, 99, 132, 1)', // Border color
+          data: emissionsData,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 1,
         }]
       },
-            options: {
+      options: {
         responsive: true,
-        maintainAspectRatio: false, // allow height to follow container
+        maintainAspectRatio: false,
         scales: {
           y: {
             beginAtZero: true,
@@ -143,17 +162,16 @@ function updateGHGChart(data) {
           },
           tooltip: {
             callbacks: {
-              label: function(tooltipItem) {
+              label: function (tooltipItem) {
                 return `${tooltipItem.label}: ${tooltipItem.raw} TCO₂`;
               }
             }
           }
         }
       }
-
     });
   } else {
-    // Update the existing chart with new data
+    // Update existing chart
     ghgChart.data.labels = years;
     ghgChart.data.datasets[0].data = emissionsData;
     ghgChart.update();
@@ -162,18 +180,23 @@ function updateGHGChart(data) {
 
 // Filter company table by name
 function filterTable() {
-  const input = document.getElementById("companySearch").value.toLowerCase();
+  const input = document.getElementById("companySearch");
+  if (!input) return;
+
+  const searchValue = input.value.toLowerCase();
   const rows = document.querySelectorAll("#company-table-body tr");
 
   rows.forEach((row) => {
     const company = row.querySelector(".company-name")?.textContent.toLowerCase() || "";
-    row.style.display = company.includes(input) ? "" : "none";
+    row.style.display = company.includes(searchValue) ? "" : "none";
   });
 }
 
-// Error message utility
+// Show error message in alert box
 function showError(msg) {
   const alertBox = document.querySelector(".alert-danger");
+  if (!alertBox) return;
+
   alertBox.textContent = msg;
   alertBox.classList.remove("d-none");
   setTimeout(() => alertBox.classList.add("d-none"), 4000);
