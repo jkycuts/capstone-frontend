@@ -24,17 +24,14 @@
 
     <!-- Custom Scripts -->
     <script type="module" src="js/admin.dasboard/admin-dashboard.js" defer></script>
-
     <script src="js/utils/script.js"></script>
 
     <style>
-  #ghgChart {
-    width: 100% !important;
-    height: 300px !important; /* or whatever height fits */
-  }
-</style>
-
-
+        #ghgChart {
+            width: 100% !important;
+            height: 300px !important;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed" data-page="dashboard">
@@ -46,7 +43,7 @@
         <ul class="navbar-nav ms-auto me-3 me-lg-4 pe-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                   data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" id="btn_logout" type="button">Logout</a></li>
                 </ul>
@@ -54,7 +51,7 @@
         </ul>
     </nav>
 
-    <!-- Sidebar and Main -->
+    <!-- Sidebar and Main Content -->
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
@@ -76,7 +73,7 @@
                             Ghg Emission
                         </a>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTree"
-                            aria-expanded="false" aria-controls="collapseTree">
+                           aria-expanded="false" aria-controls="collapseTree">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
                             Tree
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -90,7 +87,7 @@
 
                         <div class="sb-sidenav-menu-heading">Inventory</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseGHG"
-                            aria-expanded="false" aria-controls="collapseGHG">
+                           aria-expanded="false" aria-controls="collapseGHG">
                             <div class="sb-nav-link-icon"><i class="fa-solid fa-seedling"></i></div>
                             GHG Emission
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -117,7 +114,6 @@
             </nav>
         </div>
 
-        <!-- Main Content -->
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4 mb-4">
@@ -131,26 +127,21 @@
                         </a>
                     </div>
 
-                    <!-- Alert Notifications -->
                     <div class="alert alert-success d-none mt-3" role="alert"></div>
                     <div class="alert alert-danger d-none mt-3" role="alert"></div>
 
-                    <!-- Carbon Summary Section -->
                     <div class="bg-white p-6 rounded-xl shadow mb-8 mt-4">
                         <h2 id="carbonStatus" class="text-lg font-semibold mb-4 text-center"></h2>
 
-                        <!-- Year Selection -->
                         <div class="mb-4 flex items-center gap-4">
                             <label for="yearSelect" class="font-medium">Select Year:</label>
                             <select id="yearSelect" class="border px-2 py-1 rounded bg-white shadow">
                                 <option value="">Loading...</option>
                             </select>
 
-                            <input type="text" id="companySearch" placeholder="Search company..."
-                                class="border px-2 py-1 rounded ml-auto w-64" />
+                            
                         </div>
 
-                        <!-- KPIs -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
                             <div class="bg-white shadow p-4 rounded text-red-600">
                                 <p class="text-gray-500">Total Emissions</p>
@@ -170,8 +161,6 @@
                             </div>
                         </div>
 
-                        <!-- Chart -->
-                        <!-- Wrap the chart in a div with more spacing -->
                         <div class="bg-white shadow p-4 rounded-lg mb-12">
                             <h2 class="text-lg font-semibold mb-2">GHG Emissions Over Time</h2>
                             <div class="relative w-full h-64">
@@ -179,10 +168,8 @@
                             </div>
                         </div>
 
-
-
-                        <!-- Table -->
                         <div class="overflow-auto">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">Company Carbon Overview</h2>
                             <table class="min-w-full bg-white rounded shadow">
                                 <thead class="bg-gray-200 text-left">
                                     <tr>
@@ -199,6 +186,32 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Specific Company Overview Table -->
+                       <!-- Modal -->
+<div id="companyDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+  <div class="bg-white p-6 rounded-lg w-11/12 md:w-1/2 shadow-lg">
+    <h2 class="text-xl font-bold mb-4">Company Details</h2>
+    <p><strong>Company Name:</strong> <span id="modalCompanyName"></span></p>
+    <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+    <p><strong>Year:</strong> <span id="modalYear"></span></p>
+    <p><strong>Total Emissions:</strong> <span id="modalEmissions"></span> TCO₂</p>
+    <p><strong>Total Sequestration:</strong> <span id="modalSequestration"></span> TCO₂</p>
+    <p><strong>Net Variance:</strong> <span id="modalNetVariance"></span> TCO₂</p>
+    <p><strong>Status:</strong> <span id="modalStatus" class="font-semibold"></span></p>
+    <div id="modalMessageBox" class="mt-4 p-4 rounded-lg border flex items-start space-x-3 hidden">
+  <div id="modalMessageIcon" class="w-4 h-4 mt-1 rounded-full flex-shrink-0"></div>
+  <p id="modalMessageText" class="text-sm font-medium"></p>
+</div>
+
+
+    <button onclick="closeCompanyModal()" class="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Close</button>
+  </div>
+</div>
+
+
+
+
                     </div>
                 </div>
             </main>

@@ -7,11 +7,9 @@ async function loadGHGSummaryTable() {
     if (!token) return errorNotification("No token found.", 5);
 
     const endpoints = [
-        { label: "Fuel Consumption", url: "/api/ghg-emission/fuel/details" },            // Scope 1
-        { label: "Electricity", url: "/api/ghg-emission/electricity/details" },          // Scope 2
-        { label: "Business Travel", url: "/api/ghg-emission/travel/details" },           // Scope 3
-        
-        // Add more if your backend supports it
+        { label: "Fuel Consumption", url: "/api/ghg-emission/fuel/details" },       // Scope 1
+        { label: "Electricity",      url: "/api/ghg-emission/electricity/details" }, // Scope 2
+        { label: "Business Travel",  url: "/api/ghg-emission/travel/details" },      // Scope 3
     ];
 
     const yearSet = new Set();
@@ -23,25 +21,37 @@ async function loadGHGSummaryTable() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
 
-            if (!res.ok) throw new Error(`Failed to load ${label} data`);
+            if (!res.ok) throw new Error(`Failed to load ${label} data (HTTP ${res.status})`);
 
-            const records = await res.json();
-            console.log(`${label} records:`, records);
+            const response = await res.json();
+            const records = Array.isArray(response) ? response : response.data;
 
-            if (!Array.isArray(records)) continue;
+            console.log(`✅ ${label} raw records:`, records);
+
+            if (!Array.isArray(records)) {
+                console.warn(`⚠️ ${label} response is not an array:`, records);
+                continue;
+            }
 
             scopeData[label] = {};
 
-            records.forEach(record => {
-                const year = record.year;
-                const emission = parseFloat(record.emission_tco2e || 0);
-                yearSet.add(year);
-                if (!scopeData[label][year]) scopeData[label][year] = 0;
-                scopeData[label][year] += emission;
-            });
+           records.forEach(record => {
+    const year = record.year || record.emission_year;
+    const emission = parseFloat(record.emission_tco2e || record.emission || 0);
+
+    if (!year || isNaN(emission)) {
+        console.warn(`❌ Skipping invalid ${label} record:`, record);
+        return;
+    }
+
+    yearSet.add(year);
+    if (!scopeData[label][year]) scopeData[label][year] = 0;
+    scopeData[label][year] += emission;
+});
+
 
         } catch (err) {
-            console.error(err);
+            console.error(`🚨 Error fetching ${label}:`, err);
             errorNotification(`Error loading ${label} emissions.`, 5);
         }
     }
@@ -90,6 +100,5 @@ async function loadGHGSummaryTable() {
     footerRow += `<th id="overall_total">${grandTotal.toFixed(3)}</th></tr>`;
     tableFoot.innerHTML = footerRow;
 
-    // 🧪 Log for comparison
-    console.log("🟩 Summary table total emission (frontend):", grandTotal.toFixed(3));
+    console.log("🟢 Final Summary Total (frontend):", grandTotal.toFixed(3));
 }

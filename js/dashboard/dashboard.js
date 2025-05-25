@@ -97,39 +97,47 @@ function renderGHGChart(totalEmission, totalSequestration, carbonVariance, perce
 // Render Carbon Status Signal
 function renderStatusSignal(totalEmissions, totalSequestration) {
     const icon = document.getElementById("carbon-status-icon");
-    const text = document.getElementById("carbon-status-text");
+    const statusText = document.getElementById("carbon-status-text");
+    const statusMessage = document.getElementById("carbon-status-message");
     const container = document.getElementById("carbon-status");
 
-    if (!icon || !text || !container) return;
+    if (!icon || !statusText || !statusMessage || !container) return;
 
     let status = "";
+    let messageText = "";
     let iconColor = "";
     let containerBg = "";
     let textColor = "";
 
     if (totalSequestration > totalEmissions) {
         status = "Carbon Positive";
+        messageText = "Great job! Your carbon sequestration exceeds your emissions.";
         iconColor = "bg-green-500";
         containerBg = "bg-green-50 border-green-300";
         textColor = "text-green-700";
     } else if (totalSequestration === totalEmissions) {
         status = "Carbon Neutral";
+        messageText = "You're in balance. Emissions are fully offset by sequestration.";
         iconColor = "bg-gray-500";
         containerBg = "bg-gray-50 border-gray-300";
         textColor = "text-gray-700";
     } else {
         status = "Carbon Negative";
+        messageText = "You need to plant more trees to offset your carbon emissions.";
         iconColor = "bg-red-500";
         containerBg = "bg-red-50 border-red-300";
         textColor = "text-red-700";
     }
 
-    // Apply styles
+    // Apply styles and text
     icon.className = `w-5 h-5 rounded-full ring-2 ring-white animate-pulse shadow-md ${iconColor}`;
     container.className = `status-signal p-4 rounded-xl mb-6 flex items-center space-x-4 shadow-md border ${containerBg}`;
-    text.className = `text-lg font-semibold ${textColor}`;
-    text.textContent = status;
+    statusText.className = `text-lg font-semibold ${textColor}`;
+    statusText.textContent = status;
+    statusMessage.className = `text-sm ${textColor}`;
+    statusMessage.textContent = messageText;
 }
+
 
 
 // Fetch Dashboard Summary Data
